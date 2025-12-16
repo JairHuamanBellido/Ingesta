@@ -2,6 +2,7 @@
 	import './layout.css';
 	import { ModeWatcher } from 'mode-watcher';
 	import favicon from '$lib/assets/favicon.svg';
+	import { Toaster } from '@/components/ui/sonner';
 
 	let { children } = $props();
 </script>
@@ -15,5 +16,6 @@
 		rel="stylesheet"
 	/>
 </svelte:head>
+<Toaster />
 <ModeWatcher />
 {@render children()}

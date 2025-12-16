@@ -14,7 +14,12 @@ const config = {
 		adapter: adapter(),
 
 		alias: {
-			'@/*': './src/lib/*'
+			'@/*': './src/lib/*',
+			'$infrastructure': 'src/infrastructure',
+			'$core': 'src/core',
+			'$domain': 'src/domain',
+			'$components-nodes': 'src/lib/components/nodes',
+			'$shadcn-components': 'src/lib/components/ui'
 		}
 	}
 };

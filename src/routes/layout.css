@@ -53,6 +53,13 @@
 	--sidebar-accent-foreground: oklch(0.961 0.017 267.791);
 	--sidebar-border: oklch(0.921 0.034 265.229);
 	--sidebar-ring: oklch(0.616 0.183 262.945);
+
+	--data-enrichment: oklch(0.616 0.183 262.945);
+	--data-transformation: oklch(74.16% 0.18108 124.002);
+	--parsing-and-extraction: oklch(81.511% 0.14191 81.163);
+	--filtering-and-cleanup: oklch(58.083% 0.23912 298.47);
+	--advanced: oklch(58.125% 0.17931 141.757);
+	--conditional: oklch(65.919% 0.21285 359.391);
 }
 
 .dark {
@@ -71,8 +78,8 @@
 	--secondary: oklch(0.3 0.077 263.377);
 	--secondary-foreground: oklch(1 0 0);
 
-	--muted: oklch(0.28 0.01 260.705);
-	--muted-foreground: oklch(0.592 0.038 265.043);
+	--muted: oklch(0.259 0.025 261.09);
+	--muted-foreground: oklch(0.616 0.024 265.659);
 
 	--accent: oklch(0.3 0.077 263.377);
 	--accent-foreground: oklch(0.941 0.025 263.328);
@@ -100,6 +107,13 @@
 	--sidebar-accent-foreground: oklch(0.961 0.017 267.791);
 	--sidebar-border: oklch(0.217 0.048 263.587);
 	--sidebar-ring: oklch(0.616 0.183 262.945);
+
+	--data-enrichment: oklch(0.616 0.183 262.945);
+	--data-transformation: oklch(0.897 0.221 124.384);
+	--parsing-and-extraction: oklch(81.511% 0.14191 81.163);
+	--filtering-and-cleanup: oklch(70.369% 0.16151 302.14);
+	--advanced: oklch(89.391% 0.16328 141.987);
+	--conditional: oklch(65.919% 0.21285 359.391);
 }
 
 @theme inline {
@@ -138,11 +152,17 @@
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
+	--color-conditional: var(--conditional);
+	--color-data-enrichment: var(--data-enrichment);
+	--color-data-transformation: var(--data-transformation);
+	--color-parsing-and-extraction: var(--parsing-and-extraction);
+	--color-filtering-and-cleanup: var(--filtering-and-cleanup);
+	--color-advanced: var(--advanced);
 }
 
 @layer base {
 	* {
-		@apply border-border outline-ring/50;
+		@apply border-border antialiased outline-ring/50;
 		font-family: 'Urbanist', sans-serif;
 	}
 	body {
