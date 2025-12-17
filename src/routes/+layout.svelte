@@ -1,12 +1,22 @@
 <script lang="ts">
 	import './layout.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import { ModeWatcher } from 'mode-watcher';
+	import favicon from '$lib/assets/logo.svg';
+	import { Toaster } from '@/components/ui/sonner';
 
 	let { children } = $props();
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+		rel="stylesheet"
+	/>
+	<title>Ingesta | OpenSearch Ingest Pipeline Builder</title>
 </svelte:head>
-
+<Toaster />
+<ModeWatcher />
 {@render children()}

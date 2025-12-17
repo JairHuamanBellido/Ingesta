@@ -1,38 +1,126 @@
-# sv
+<div align="center">
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+![Ingesta](src/lib/assets/logo.svg)
 
-## Creating a project
+<h1>Ingesta</>
+</div>
 
-If you're seeing this, you've probably already done this step. Congrats!
+A Svelte-based visual workflow builder for creating and managing OpenSearch ingest pipelines. Design complex data processing workflows with an intuitive node-based interface, configure conditional logic for processors, and simulate pipelines with real API calls to OpenSearch.
+
+![Main Image](src/lib/assets/main.png)
+
+## Features
+
+- **Visual Pipeline Designer**: Build ingest pipelines using an intuitive drag-and-drop workflow interface
+- **Node Processors**: Create and configure processor nodes with custom conditional logic
+- **Pipeline Simulation**: Test your pipelines with live API calls to OpenSearch
+- **Real-time Validation**: Verify pipeline configurations before deployment
+- **Test Management**: Store and manage test cases with payloads and results
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v24.11.1)
+- npm, pnpm, or yarn
+- OpenSearch instance (for testing and simulation)
+- Docker (for local development)
+
+### Installation
 
 ```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+docker compose up
 ```
 
-## Developing
+🔨 WORK IN PROGRESS
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## 🚧 Development Roadmap
 
-```sh
-npm run dev
+<div style="text-align: left; display: flex; column-gap: 10px">
+<p style="padding: 2px; background-color: #42f58a12; color: #32d172; border-radius: 4px;">&nbsp;Completed&nbsp;</p>
+<p >Drag and Drop Node Processors</p>
+</div>
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+<div style="text-align: left; display: flex; column-gap: 10px">
+<p style="padding: 2px; background-color: #42f58a12; color: #32d172; border-radius: 4px;">&nbsp;Completed&nbsp;</p>
+<p >Conditional Nodes</p>
+</div>
 
-## Building
+<div style="text-align: left; display: flex; column-gap: 10px">
+<p style="padding: 2px; background-color: #42f58a12; color: #32d172; border-radius: 4px;">&nbsp;Completed&nbsp;</p>
+<p >Display pipeline configuration (JSON Mode)</p>
+</div>
 
-To create a production version of your app:
+<div style="text-align: left; display: flex; column-gap: 10px">
+<p style="padding: 2px; background-color: #42f58a12; color: #32d172; border-radius: 4px;">&nbsp;Completed&nbsp;</p>
+<p >Pipeline Simulation</p>
+</div>
 
-```sh
-npm run build
-```
+<div style="text-align: left; display: flex; column-gap: 10px">
+<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;Not Started&nbsp;</p>
+<p>Deploy to pipeline</p>
+</div>
 
-You can preview the production build with `npm run preview`.
+<div style="text-align: left; display: flex; column-gap: 10px">
+<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;Not Started&nbsp;</p>
+<p>On Failure Processors</p>
+</div>
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+<div style="text-align: left; display: flex; column-gap: 10px">
+<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;Not Started&nbsp;</p>
+<p>Save tests</p>
+</div>
+
+<div style="text-align: left; display: flex; column-gap: 10px">
+<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;👀 Planning&nbsp;</p>
+<p>Pipeline Templates (logs, metrics, security, events)</p>
+</div>
+
+<div style="text-align: left; display: flex; column-gap: 10px">
+<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;👀 Planning&nbsp;</p>
+<p>Bulk Import</p>
+</div>
+
+## Processors Integration
+
+| Processor Type | Integrated | 
+| ------------- | ------------- |
+| Append  | ✅ Completed |
+| Bytes  | ✅ Completed |
+| Convert | ✅ Completed |
+| Copy | ✅ Completed |
+| CSV | ✅ Completed |
+| Date | ✅ Completed |
+| Community ID | 🚨 Not Started|
+| Date index name |🚨 Not Started|
+| Dissect | 🚨 Not Started|
+| Dot expander | 🚨 Not Started
+| Drop | ✅ Completed
+| Fail | ✅ Completed
+| Fingerprint | ✅ Completed
+| Foreach | 🚨 Not Started
+| gsub | ✅ Completed
+| IP2Geo | 🚨 Not Started
+| Grok | ✅ Completed
+| HTML strip | 🚨 Not Started
+| Join | 🚨 Not Started
+| JSON | ✅ Completed
+| KV | 🚨 Not Started
+| Lowercase | ✅ Completed
+| ML inference | 🚨 Not Started
+| Pipeline | 🚨 Not Started
+| Remove | ✅ Completed
+| Remove by pattern | 🚨 Not Started
+| Rename | ✅ Completed |
+| Script | 🚨 Not Started |
+| Set | ✅ Completed |
+| Sparse enconding | 🚨 Not Started
+| Sort | 🚨 Not Started
+| Text chunking | 🚨 Not Started
+| Text embedding | 🚨 Not Started
+| Split | ✅ Completed
+| Text/image embedding | 🚨 Not Started
+| Trim | ✅ Completed
+| Uppercase | ✅ Completed
+| URL Decode | 🚨 Not Started
+| User agent | ✅ Completed
