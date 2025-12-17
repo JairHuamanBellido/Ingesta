@@ -36,50 +36,15 @@ docker compose up
 
 ## 🚧 Development Roadmap
 
-<div style="text-align: left; display: flex; column-gap: 10px">
-<p style="padding: 2px; background-color: #42f58a12; color: #32d172; border-radius: 4px;">&nbsp;Completed&nbsp;</p>
-<p >Drag and Drop Node Processors</p>
-</div>
-
-<div style="text-align: left; display: flex; column-gap: 10px">
-<p style="padding: 2px; background-color: #42f58a12; color: #32d172; border-radius: 4px;">&nbsp;Completed&nbsp;</p>
-<p >Conditional Nodes</p>
-</div>
-
-<div style="text-align: left; display: flex; column-gap: 10px">
-<p style="padding: 2px; background-color: #42f58a12; color: #32d172; border-radius: 4px;">&nbsp;Completed&nbsp;</p>
-<p >Display pipeline configuration (JSON Mode)</p>
-</div>
-
-<div style="text-align: left; display: flex; column-gap: 10px">
-<p style="padding: 2px; background-color: #42f58a12; color: #32d172; border-radius: 4px;">&nbsp;Completed&nbsp;</p>
-<p >Pipeline Simulation</p>
-</div>
-
-<div style="text-align: left; display: flex; column-gap: 10px">
-<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;Not Started&nbsp;</p>
-<p>Deploy to pipeline</p>
-</div>
-
-<div style="text-align: left; display: flex; column-gap: 10px">
-<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;Not Started&nbsp;</p>
-<p>On Failure Processors</p>
-</div>
-
-<div style="text-align: left; display: flex; column-gap: 10px">
-<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;Not Started&nbsp;</p>
-<p>Save tests</p>
-</div>
-
-<div style="text-align: left; display: flex; column-gap: 10px">
-<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;👀 Planning&nbsp;</p>
-<p>Pipeline Templates (logs, metrics, security, events)</p>
-</div>
-
-<div style="text-align: left; display: flex; column-gap: 10px">
-<p style="padding: 2px; background-color: #43434343; border-radius: 4px;">&nbsp;👀 Planning&nbsp;</p>
-<p>Bulk Import</p>
-</div>
+- ✅ Drag and Drop Node Processors
+- ✅ Conditional Nodes
+- ✅ Display pipeline configuration (JSON Mode)
+- ✅ Pipeline Simulation
+- 🚧 Failure Processors integration (In Progress)
+- 🔨 Deploy to pipeline (Not Started)
+- 🔨 Save tests (Not Started)
+- 🪖 Pipeline Templates (logs, metrics, security, events) (Planning)
+- 🪖 Bulk Import (Plannig)
 
 ## Processors Integration
 
