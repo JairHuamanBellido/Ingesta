@@ -18,7 +18,7 @@
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
 	const { updateNodeData } = useSvelteFlow();
-	const connections = useNodeConnections({
+	const connectionsConditionals = useNodeConnections({
 		handleType: 'source',
 		handleId: `node-processor-${props.id}-conditional-source`
 	});
@@ -33,7 +33,7 @@
 		updateNodeData(props.id, { ...props.data, fields: updatedFields });
 	}
 
-	const connectionsCount = $derived(connections.current.length);
+	const connectionsConditionalsCount = $derived(connectionsConditionals.current.length);
 	let targetNodeStore = $derived($nodeStore[props.id]);
 </script>
 
@@ -101,13 +101,23 @@
 					<div class="flex items-center justify-between relative">
 						<Label for={field.key} class="text-xs  font-medium text-foreground">{field.label}</Label
 						>
-						<Handle
-							type="source"
-							id={`node-processor-${props.id}-conditional-source`}
-							class="left-[267px] bg-conditional! border-[1.5px] border-background! "
-							isConnectable={connectionsCount < 1}
-							position={Position.Right}
-						/>
+						{#if field.key === 'if'}
+							<Handle
+								type="source"
+								id={`node-processor-${props.id}-conditional-source`}
+								class="left-[267px] bg-conditional! border-[1.5px] border-background! "
+								isConnectable={connectionsConditionalsCount < 1}
+								position={Position.Right}
+							/>
+						{/if}
+						{#if field.key === 'on_failure'}
+							<Handle
+								type="source"
+								id={`node-processor-${props.id}-on-failure-source`}
+								class="left-[267px] "
+								position={Position.Right}
+							/>
+						{/if}
 					</div>
 				{/if}
 				{#if field.type === 'select'}

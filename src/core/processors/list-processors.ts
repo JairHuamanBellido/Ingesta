@@ -6,14 +6,6 @@ const commonParamters = [
 		required: false,
 		defaultValue: ''
 	},
-
-	{
-		type: 'string',
-		key: 'on_failure',
-		label: 'On Failure',
-		required: false,
-		defaultValue: ''
-	},
 	{
 		type: 'string',
 		key: 'tag',
@@ -34,7 +26,14 @@ const commonParamters = [
 		label: 'Condition',
 		required: false,
 		defaultValue: ''
-	}
+	},
+		{
+		type: 'node',
+		key: 'on_failure',
+		label: 'On Failure',
+		required: false,
+		defaultValue: ''
+	},
 ];
 
 // Data Enrichment
