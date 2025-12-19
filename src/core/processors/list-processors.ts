@@ -27,13 +27,13 @@ const commonParamters = [
 		required: false,
 		defaultValue: ''
 	},
-		{
+	{
 		type: 'node',
 		key: 'on_failure',
 		label: 'On Failure',
 		required: false,
 		defaultValue: ''
-	},
+	}
 ];
 
 // Data Enrichment
@@ -584,39 +584,47 @@ export const DATE_PROCESSOR = {
 			defaultValue: ''
 		},
 		{
-			type: 'string',
-			key: 'target_field',
-			label: 'Target Field',
-			required: false,
-			defaultValue: '@timestamp'
-		},
-		{
 			type: 'array',
 			key: 'formats',
 			label: 'Formats',
 			required: true,
-			defaultValue: []
+			defaultValue: [],
+			helperText: {
+				text: 'Learn more about supported date formats.',
+				link: 'https://docs.opensearch.org/latest/mappings/supported-field-types/date'
+			}
+		},
+		{
+			type: 'string',
+			key: 'target_field',
+			label: 'Target Field',
+			required: false,
+			defaultValue: ''
 		},
 		{
 			type: 'string',
 			key: 'timezone',
 			label: 'Timezone',
 			required: false,
-			defaultValue: 'UTC'
+			defaultValue: ''
 		},
 		{
 			type: 'string',
 			key: 'locale',
 			label: 'Locale',
 			required: false,
-			defaultValue: 'ENGLISH'
+			defaultValue: ''
 		},
 		{
 			type: 'string',
 			key: 'output_format',
 			label: 'Output Format',
 			required: false,
-			defaultValue: ''
+			defaultValue: '',
+			helperText: {
+				text: 'Learn more about supported date formats.',
+				link: 'https://docs.opensearch.org/latest/mappings/supported-field-types/date'
+			}
 		},
 		...commonParamters
 	]
