@@ -21,7 +21,14 @@ export type ProcessorsNodeData = {
 	 */
 	groupKey: string;
 
-	fields: Array<{ label: string; value: string; required: boolean; key: string; type: string }>;
+	fields: Array<{
+		label: string;
+		value: string | Array<string>;
+		required: boolean;
+		key: string;
+		type: string;
+		helperText?: { text: string; link: string };
+	}>;
 };
 
 export type ConditionalNodeData = {
