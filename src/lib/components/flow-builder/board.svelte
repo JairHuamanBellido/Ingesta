@@ -25,6 +25,7 @@
 	import type { DeletionContext } from '$core/validators/types';
 	import { createConnectionValidationChain } from '$core/validators/connection';
 	import NodeProcessorPipeline from '../nodes/node-processor-pipeline.svelte';
+	import DeployPipelineButton from '../deploy-pipeline/deploy-pipeline-button.svelte';
 
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
@@ -161,6 +162,7 @@
 				<span>Simulate</span>
 			</Button>
 			<SaveChanges {pipeline} />
+			<DeployPipelineButton {pipeline} />
 		</div>
 	</div>
 	<div class="w-full relative h-full flex">

@@ -20,7 +20,6 @@
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
 	let pipelines = $state<Array<string>>([]);
-	console.log(props);
 	const { updateNodeData } = useSvelteFlow();
 	const connectionsConditionals = useNodeConnections({
 		handleType: 'source',

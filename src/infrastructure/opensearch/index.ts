@@ -99,4 +99,22 @@ export class OpenSearchController {
 			return this.handleError(error);
 		}
 	}
+
+	static async getPipelineById(
+		id: string
+	): Promise<APIResult<IOpensearchGetAllPipelinesResponse | OpenSearchErrorResponse>> {
+		try {
+			const pipeline = await this.axiosInstance.get<IOpensearchGetAllPipelinesResponse>(
+				`/_ingest/pipeline/${id}`
+			);
+
+			return {
+				isSuccess: true,
+				data: pipeline.data,
+				statusCode: pipeline.status
+			};
+		} catch (error) {
+			return this.handleError(error);
+		}
+	}
 }
