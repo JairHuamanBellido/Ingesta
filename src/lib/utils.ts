@@ -9,6 +9,8 @@ export function cleanObject(obj: any) {
 	return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== '' && value));
 }
 
+export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type WithoutChild<T> = T extends { child?: any } ? Omit<T, 'child'> : T;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
