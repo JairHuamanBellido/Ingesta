@@ -21,3 +21,10 @@ export interface ITests {
 	timestamp: Date;
 	status_code: number;
 }
+
+export interface IOpensearchGetAllPipelinesResponse {
+	[key: string]: {
+		description?: string;
+		processors: Array<IProcessor>;
+	};
+}

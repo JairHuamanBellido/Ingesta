@@ -24,6 +24,7 @@
 	import { createDeletionValidationChain } from '$core/validators/deletion';
 	import type { DeletionContext } from '$core/validators/types';
 	import { createConnectionValidationChain } from '$core/validators/connection';
+	import NodeProcessorPipeline from '../nodes/node-processor-pipeline.svelte';
 
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
@@ -49,6 +50,7 @@
 		nodeProcessorUppercase: NodeProcessorBase,
 		nodeProcessorSplit: NodeProcessorBase,
 		nodeProcessorTrim: NodeProcessorBase,
+		nodeProcessorPipeline: NodeProcessorPipeline,
 		nodeProcessorGrok: NodeProcessorBase,
 		nodeProcessorJson: NodeProcessorBase,
 		nodeProcessorCsv: NodeProcessorBase,

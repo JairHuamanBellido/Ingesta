@@ -1,10 +1,13 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance } from 'axios';
 import https from 'node:https';
-import type { IProcessor } from '$infrastructure/model/pipeline.model';
+import type {
+	IOpensearchGetAllPipelinesResponse,
+	IProcessor
+} from '$infrastructure/model/pipeline.model';
 import type { OpenSearchErrorResponse, OpenSearchOperationResponse } from './types';
 import type { APIResult } from '$core/axios/types';
-import {   OPENSEARCH_PASSWORD, OPENSEARCH_URL,OPENSEARCH_USERNAME } from '$env/static/private';
+import { OPENSEARCH_PASSWORD, OPENSEARCH_URL, OPENSEARCH_USERNAME } from '$env/static/private';
 
 export class OpenSearchController {
 	private static axiosInstance: AxiosInstance = axios.create({
@@ -78,5 +81,22 @@ export class OpenSearchController {
 
 	static async simulatePipeline({ payload, pipelineId }: { pipelineId: string; payload: JSON }) {
 		return await this.axiosInstance.post(`_ingest/pipeline/${pipelineId}/_simulate`, payload);
+	}
+
+	static async getAllPipelines(): Promise<
+		APIResult<IOpensearchGetAllPipelinesResponse | OpenSearchErrorResponse>
+	> {
+		try {
+			const pipelines =
+				await this.axiosInstance.get<IOpensearchGetAllPipelinesResponse>('/_ingest/pipeline');
+
+			return {
+				isSuccess: true,
+				data: pipelines.data,
+				statusCode: pipelines.status
+			};
+		} catch (error) {
+			return this.handleError(error);
+		}
 	}
 }
