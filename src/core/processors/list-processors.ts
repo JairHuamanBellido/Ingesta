@@ -423,6 +423,24 @@ export const TRIM_PROCESSOR = {
 	]
 };
 
+export const PIPELINE_PROCESSOR = {
+	type: 'nodeProcessorPipeline',
+	groupKey: 'data-transformation',
+	key: 'pipeline',
+	label: 'Pipeline',
+	description: 'Executes another ingest pipeline on the document.',
+	fields: [
+		{
+			type: 'select',
+			key: 'name',
+			label: 'Name',
+			required: true,
+			defaultValue: ''
+		},
+		...commonParamters
+	]
+};
+
 // Data parsing & Extraction
 export const GROK_PROCESSOR = {
 	type: 'nodeProcessorGrok',
@@ -835,7 +853,8 @@ export const PROCESSORS_BY_CATEGORY = [
 			LOWERCASE_PROCESSOR,
 			UPPERCASE_PROCESSOR,
 			SPLIT_PROCESSOR,
-			TRIM_PROCESSOR
+			TRIM_PROCESSOR,
+			PIPELINE_PROCESSOR
 		]
 	},
 	{
@@ -881,6 +900,7 @@ export const PROCESSORS = [
 	UPPERCASE_PROCESSOR,
 	SPLIT_PROCESSOR,
 	TRIM_PROCESSOR,
+	PIPELINE_PROCESSOR,
 	GROK_PROCESSOR,
 	JSON_PROCESSOR,
 	CSV_PROCESSOR,

@@ -25,6 +25,7 @@
 	import ExclamationMark from 'phosphor-svelte/lib/ExclamationMark';
 	import Fingerprint from 'phosphor-svelte/lib/Fingerprint';
 	import Binary from 'phosphor-svelte/lib/Binary';
+	import FlowArrow from 'phosphor-svelte/lib/FlowArrow';
 	import type { IconWeight } from 'phosphor-svelte';
 
 	const IconsPerSection = {
@@ -44,6 +45,7 @@
 		lowercase: TextAA,
 		split: GitFork,
 		trim: Backspace,
+		pipeline: FlowArrow,
 		grok: ArrowSquareRight,
 		json: BracketsCurly,
 		csv: FileCSV,
