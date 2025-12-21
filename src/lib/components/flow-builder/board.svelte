@@ -26,6 +26,7 @@
 	import { createConnectionValidationChain } from '$core/validators/connection';
 	import NodeProcessorPipeline from '../nodes/node-processor-pipeline.svelte';
 	import DeployPipelineButton from '../deploy-pipeline/deploy-pipeline-button.svelte';
+	import NodeProcessorCsv from '../nodes/node-processor-csv.svelte';
 
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
@@ -54,7 +55,7 @@
 		nodeProcessorPipeline: NodeProcessorPipeline,
 		nodeProcessorGrok: NodeProcessorBase,
 		nodeProcessorJson: NodeProcessorBase,
-		nodeProcessorCsv: NodeProcessorBase,
+		nodeProcessorCsv: NodeProcessorCsv,
 		nodeProcessorDate: NodeProcessorBase,
 		nodeProcessorUserAgent: NodeProcessorBase,
 		nodeProcessorDrop: NodeProcessorBase,

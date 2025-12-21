@@ -542,7 +542,7 @@ export const CSV_PROCESSOR = {
 			defaultValue: ''
 		},
 		{
-			type: 'array',
+			type: 'string',
 			key: 'target_fields',
 			label: 'Target Fields',
 			required: true,
@@ -557,10 +557,10 @@ export const CSV_PROCESSOR = {
 		},
 		{
 			type: 'string',
-			key: 'quote',
-			label: 'Quote',
+			key: 'empty_value',
+			label: 'Empty Value',
 			required: false,
-			defaultValue: '"'
+			defaultValue: ''
 		},
 		{
 			type: 'boolean',
@@ -568,13 +568,6 @@ export const CSV_PROCESSOR = {
 			label: 'Trim',
 			required: false,
 			defaultValue: false
-		},
-		{
-			type: 'boolean',
-			key: 'empty_value',
-			label: 'Empty Value',
-			required: false,
-			defaultValue: ''
 		},
 		{
 			type: 'boolean',
