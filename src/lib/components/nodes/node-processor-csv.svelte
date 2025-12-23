@@ -13,9 +13,6 @@
 	import Switch from '$shadcn-components/switch/switch.svelte';
 	import IconsDictionary from '../icons/icons-dictionary.svelte';
 	import { nodeStore } from '@/stores/nodeStore';
-	import * as Tooltip from '$shadcn-components/tooltip/index.js';
-	import Info from 'phosphor-svelte/lib/Info';
-	import DateFormatMultiSelect from '../date/date-format-multi-select.svelte';
 
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
@@ -41,20 +38,6 @@
 	const connectionsConditionalsCount = $derived(connectionsConditionals.current.length);
 	let targetNodeStore = $derived($nodeStore[props.id]);
 </script>
-
-{#snippet tooltip(text: string, link: string)}
-	<Tooltip.Provider>
-		<Tooltip.Root>
-			<Tooltip.Trigger>
-				<Info />
-			</Tooltip.Trigger>
-			<Tooltip.Content>
-				<p>{text}</p>
-				<a class="underline" href={link} target="_blank" rel="noopener noreferrer">Link</a>
-			</Tooltip.Content>
-		</Tooltip.Root>
-	</Tooltip.Provider>
-{/snippet}
 
 <div class={`bg-card rounded-lg w-[300px] border-[1px] border-border ${props.data.groupKey}`}>
 	<div class="font-medium py-3 border-border/50 border-b px-4 space-y-1 relative">

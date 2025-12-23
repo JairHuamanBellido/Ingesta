@@ -7,19 +7,20 @@ export interface IPipeline {
 	nodes: Array<Node>;
 	edges: Array<Edge>;
 	processors: Array<IProcessor>;
-	tests: Array<ITests>;
+	tests: Array<ITest>;
 }
 
 export interface IProcessor {
 	[key: string]: { [key: string]: string | boolean } | IProcessor;
 }
 
-export interface ITests {
+export interface ITest {
 	id: string;
-	payload: JSON;
-	result: JSON;
+	input_payload: JSON;
+	result_payload: JSON;
 	timestamp: Date;
 	status_code: number;
+	request_duration: number;
 }
 
 export interface IOpensearchGetAllPipelinesResponse {

@@ -17,15 +17,19 @@ export const actions = {
 
 			const request_end_at = Date.now();
 			const request_duration = request_end_at - request_start_at;
-			const statusCode = simulateResponse.status;
 			const openSearchResponse = simulateResponse.data;
+			if (!!simulateResponse.data.docs[0]['error']) {
+				return fail(400, { error: openSearchResponse, request_duration });
+			}
+
+			const statusCode = simulateResponse.status;
 
 			return { statusCode, openSearchResponse, request_duration, isSuccess: true };
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				return fail(error.response?.status ?? 500, { error: error.response?.data.error.reason });
 			}
-			return fail(500, { error: 'something went wrong!' });
+			return fail(500, { error });
 		}
 	}
 };
