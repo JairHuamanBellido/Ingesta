@@ -1,32 +1,32 @@
 <script module>
-  import { getContext } from 'svelte';
+	import { getContext } from 'svelte';
 
-  export const useDnD = () => {
-    return getContext('dnd') as { current: string | null, data:any };
-  };
+	export const useDnD = (): any => {
+		return getContext('dnd');
+	};
 </script>
 
 <script lang="ts">
-  import { onDestroy, setContext, type Snippet } from 'svelte';
+	import { onDestroy, setContext, type Snippet } from 'svelte';
 
-  let { children }: { children: Snippet } = $props();
+	let { children }: { children: Snippet } = $props();
 
-  let dndType = $state(null);
+	let dndType = $state(null);
 
-  setContext('dnd', {
-    set current(value) {
-      dndType = value;
-    },
-    get current() {
-      return dndType;
-    },
-  });
+	setContext('dnd', {
+		set current(value) {
+			dndType = value;
+		},
+		get current() {
+			return dndType;
+		}
+	});
 
-  onDestroy(() => {
-    if (dndType) {
-      dndType.set(null);
-    }
-  });
+	onDestroy(() => {
+		if (dndType) {
+			(dndType as unknown as { set: (value: string | null) => void }).set(null);
+		}
+	});
 </script>
 
 {@render children()}

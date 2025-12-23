@@ -1,0 +1,87 @@
+version: '3.8'
+name: ingesta_opensearch
+services:
+  opensearch:
+    image: opensearchproject/opensearch:latest
+    container_name: ingesta_opensearch
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node
+      - network.host=0.0.0.0
+      - http.cors.enabled=false
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - plugins.security.disabled=true
+      - plugins.security.ssl.http.enabled=false
+      - plugins.security.ssl.transport.enabled=false
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ingesta_opensearch-data:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    networks:
+      - ingesta_opensearch-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+    container_name: ingesta_opensearch_dashboards
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=YOUR_PASSWORD
+    ports:
+      - "5601:5601"
+    networks:
+      - ingesta_opensearch-net
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  ingesta_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ingesta_svelte_app
+    environment:
+      - NODE_ENV=development
+      - OPENSEARCH_URL=http://opensearch:9200
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.svelte-kit
+    networks:
+      - ingesta_opensearch-net
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    command: npm run dev -- --host 0.0.0.0
+
+    
+volumes:
+  ingesta_opensearch-data:
+    driver: local
+
+networks:
+  ingesta_opensearch-net:
+    driver: bridge

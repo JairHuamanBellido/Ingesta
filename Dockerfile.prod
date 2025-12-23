@@ -1,0 +1,46 @@
+# Multi-stage production Dockerfile for SvelteKit
+FROM node:24.11.1-alpine AS builder
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apk add --no-cache python3 make g++
+
+# Copy package files
+COPY package*.json ./
+
+# Use npm install instead of npm ci (works without lock file)
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Prune dev dependencies
+RUN npm prune --production
+
+# Production stage
+FROM node:24.11.1-alpine
+
+WORKDIR /app
+
+# Copy built files
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+
+# Non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
+
+USER nodejs
+
+EXPOSE 3000
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+CMD ["node", "build"]
