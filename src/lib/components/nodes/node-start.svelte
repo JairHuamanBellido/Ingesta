@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Handle, Position, type Node, type NodeProps, useNodeConnections } from '@xyflow/svelte';
 
-	let { isConnectable, id }: NodeProps<Node<any>> = $props();
+	let props: NodeProps<Node<any>> = $props();
 
-	const connections = useNodeConnections({ id, handleId: 'source-handle' });
+	const connections = useNodeConnections({ id: props.id, handleId: 'source-handle' });
 
 	const isConnected = $derived(connections.current.length > 0);
 </script>
@@ -16,6 +16,6 @@
 		id="node-start-source-handle"
 		type="source"
 		position={Position.Right}
-		{isConnectable}
+		isConnectable={props.isConnectable}
 	/>
 </div>

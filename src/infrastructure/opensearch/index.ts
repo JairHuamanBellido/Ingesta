@@ -1,24 +1,16 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance } from 'axios';
-import https from 'node:https';
 import type {
 	IOpensearchGetAllPipelinesResponse,
 	IProcessor
 } from '$infrastructure/model/pipeline.model';
 import type { OpenSearchErrorResponse, OpenSearchOperationResponse } from './types';
 import type { APIResult } from '$core/axios/types';
-import { OPENSEARCH_PASSWORD, OPENSEARCH_URL, OPENSEARCH_USERNAME } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 export class OpenSearchController {
 	private static axiosInstance: AxiosInstance = axios.create({
-		baseURL: OPENSEARCH_URL,
-		auth: {
-			username: OPENSEARCH_USERNAME || '',
-			password: OPENSEARCH_PASSWORD || ''
-		},
-		httpsAgent: new https.Agent({
-			rejectUnauthorized: false
-		})
+		baseURL: env.OPENSEARCH_URL
 	});
 
 	private static handleError(error: unknown): APIResult<OpenSearchErrorResponse> {
