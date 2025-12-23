@@ -1,16 +1,16 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
+	import { toast } from 'svelte-sonner';
+	import axios from 'axios';
+	import SpinnerGap from 'phosphor-svelte/lib/SpinnerGap';
+	import CheckCircle from 'phosphor-svelte/lib/CheckCircle';
+	import type { IPipeline } from '$infrastructure/model/pipeline.model';
 	import * as Dialog from '$shadcn-components/dialog/index.js';
 	import * as Accordion from '$shadcn-components/accordion/index.js';
-
 	import Button from '$shadcn-components/button/button.svelte';
-	import CheckCircle from 'phosphor-svelte/lib/CheckCircle';
 
-	import type { IPipeline } from '$infrastructure/model/pipeline.model';
-	import SpinnerGap from 'phosphor-svelte/lib/SpinnerGap';
-	import axios from 'axios';
 	import { delay } from '@/utils';
-	import { toast } from 'svelte-sonner';
-	import { onDestroy } from 'svelte';
+	import JsonView from '../json-viewer/json-view.svelte';
 
 	let { pipeline, open = $bindable() }: { open: boolean; pipeline: IPipeline } = $props();
 
@@ -84,13 +84,12 @@
 					<Accordion.Content
 						class="flex flex-col gap-4 text-balance border max-h-[300px] rounded-lg  overflow-auto mt-4 pb-0"
 					>
-						<pre class="font-mono text-sm bg-transparent dark:bg-input/30 p-4"><code
-								>{JSON.stringify(
-									{ description: pipeline.description, processors: pipeline.processors },
-									null,
-									2
-								)}</code
-							></pre>
+						<JsonView
+							json={{
+								description: pipeline.description,
+								processors: pipeline.processors
+							} as unknown as JSON}
+						/>
 					</Accordion.Content>
 				</Accordion.Item>
 			</Accordion.Root>

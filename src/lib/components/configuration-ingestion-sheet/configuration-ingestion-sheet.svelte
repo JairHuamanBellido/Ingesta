@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { IPipeline } from '$infrastructure/model/pipeline.model';
 	import Gear from 'phosphor-svelte/lib/Gear';
-	import Button from '../ui/button/button.svelte';
 	import Check from 'phosphor-svelte/lib/Check';
 	import Copy from 'phosphor-svelte/lib/Copy';
+	import Button from '../ui/button/button.svelte';
+	import JsonView from '../json-viewer/json-view.svelte';
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
 	let copiedInput = $state(false);
@@ -58,14 +59,12 @@
 		</div>
 
 		<div class="p-4">
-			<pre
-				class="font-mono text-sm border bg-transparent dark:bg-input/30 rounded-lg p-4 overflow-auto"><code
-					>{JSON.stringify(
-						{ description: pipeline.description, processors: pipeline.processors },
-						null,
-						2
-					)}</code
-				></pre>
+			<JsonView
+				json={{
+					description: pipeline.description,
+					processors: pipeline.processors
+				} as unknown as JSON}
+			/>
 		</div>
 	</div>
 </div>

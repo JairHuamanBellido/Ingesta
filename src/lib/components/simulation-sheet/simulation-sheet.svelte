@@ -12,6 +12,7 @@
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import PipelineHistoryList from '$lib/components/pipelines-history-list/pipeline-history-list.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+	import JsonView from '$lib/components/json-viewer/json-view.svelte';
 	import { basic_template } from './simulation-list';
 
 	type ResultType = 'success' | 'failure' | 'redirect' | 'error';
@@ -260,15 +261,9 @@
 					<div class="overflow-auto p-4">
 						{#if result}
 							{#if result.type === 'success'}
-								<pre
-									class="font-mono text-sm border bg-transparent dark:bg-input/30 rounded-lg p-4 overflow-auto"><code
-										>{JSON.stringify(result.data.openSearchResponse, null, 2)}</code
-									></pre>
+								<JsonView json={result.data.openSearchResponse as unknown as JSON} />
 							{:else}
-								<pre class="font-mono text-sm bg-transparent rounded-lg p-4 overflow-auto"><code
-										class="text-gray-800 dark:text-gray-200"
-										>{JSON.stringify(result.data, null, 2)}</code
-									></pre>
+								<JsonView json={result.data as unknown as JSON} />
 							{/if}
 						{:else}
 							<div class="flex items-center justify-center h-full text-gray-400 mt-8">
