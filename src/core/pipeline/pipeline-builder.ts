@@ -30,8 +30,27 @@ export class PipelineBuilder {
 		const ifField = (node.data as any).fields.find((f: any) => f.key === 'if');
 
 		const payload = (node.data as any).fields.reduce((acc: any, { key, value, required }: any) => {
-			if (value) acc[key] = value;
-			else if (required) {
+			const isAStringValue = typeof value === 'string';
+			const isAnArrayAndFirstValueIsNotEmpty = Array.isArray(value) && value[0];
+
+			if ((isAStringValue && value) || isAnArrayAndFirstValueIsNotEmpty) {
+				if (key === 'pattern_definitions') {
+					acc[key] = Object.fromEntries(
+						(value as string[]).map((v: any) => {
+							if (v.field && v.regex) {
+								return [v.field, v.regex];
+							}
+							return [];
+						})
+					);
+				} else {
+					if (Array.isArray(value)) {
+						acc[key] = value.filter(Boolean);
+					} else {
+						acc[key] = value;
+					}
+				}
+			} else if (required) {
 				nodeStore.update((nodes) => ({
 					...nodes,
 					[node.id]: { ...nodes[node.id], [key]: { hasError: true } }
@@ -58,7 +77,6 @@ export class PipelineBuilder {
 
 	public build() {
 		this.nodesConnected.forEach((node) => {
-			const nodeKey = node.data.key as string;
 			const result = this.addProcessor(node);
 
 			this.pipeline.processors.push(result);

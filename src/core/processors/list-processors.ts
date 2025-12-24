@@ -461,7 +461,7 @@ export const GROK_PROCESSOR = {
 			key: 'patterns',
 			label: 'Patterns',
 			required: true,
-			defaultValue: []
+			defaultValue: ['']
 		},
 		{
 			type: 'object',
@@ -474,6 +474,13 @@ export const GROK_PROCESSOR = {
 			type: 'boolean',
 			key: 'trace_match',
 			label: 'Trace Match',
+			required: false,
+			defaultValue: false
+		},
+		{
+			type: 'boolean',
+			key: 'capture_all_matches',
+			label: 'Capture All Matches',
 			required: false,
 			defaultValue: false
 		},
