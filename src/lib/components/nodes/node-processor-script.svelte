@@ -139,7 +139,7 @@
 							</Button>
 						</div>
 						<div class="flex flex-col space-y-4">
-							{#each field.value as { key: string; value: string }[] as pattern, index}
+							{#each field.value as { key: string; value: string }[] as parameter, index}
 								<div class="flex items-center space-x-2">
 									<Input
 										oninput={(e) => {
@@ -150,7 +150,7 @@
 												)
 											);
 										}}
-										value={pattern.key}
+										value={parameter.key}
 										class="bg-card"
 										placeholder="Param name"
 									/>
@@ -162,7 +162,7 @@
 													i === index ? { ...p, value: e.currentTarget.value } : p
 												)
 											)}
-										value={pattern.value}
+										value={parameter.value}
 										class={'bg-card'}
 										placeholder={`Param value`}
 									/>
