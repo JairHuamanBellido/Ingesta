@@ -26,6 +26,7 @@
 	import Fingerprint from 'phosphor-svelte/lib/Fingerprint';
 	import Binary from 'phosphor-svelte/lib/Binary';
 	import FlowArrow from 'phosphor-svelte/lib/FlowArrow';
+	import Code from 'phosphor-svelte/lib/Code';
 	import type { IconWeight } from 'phosphor-svelte';
 
 	const IconsPerSection = {
@@ -55,7 +56,8 @@
 		remove: Trash,
 		fail: ExclamationMark,
 		fingerprint: Fingerprint,
-		bytes: Binary
+		bytes: Binary,
+		script: Code
 	};
 
 	let {

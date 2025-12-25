@@ -828,6 +828,38 @@ export const BYTES_PROCESSOR = {
 	]
 };
 
+export const SCRIPT_PROCESSOR = {
+	type: 'nodeProcessorScript',
+	groupKey: 'advanced',
+	key: 'script',
+	label: 'Script',
+	description: 'Execute a script to transform the document',
+	fields: [
+		{
+			type: 'string',
+			key: 'source',
+			label: 'Source',
+			required: false,
+			defaultValue: ''
+		},
+		{
+			type: 'string',
+			key: 'lang',
+			label: 'Language',
+			required: false,
+			defaultValue: 'painless'
+		},
+		{
+			type: 'object',
+			key: 'params',
+			label: 'Parameters',
+			required: false,
+			defaultValue: {}
+		},
+		...commonParamters
+	]
+};
+
 export const CONDITIONAL_PROCESSOR = {
 	type: 'nodeConditional',
 	groupKey: 'advanced',
@@ -879,7 +911,7 @@ export const PROCESSORS_BY_CATEGORY = [
 		key: 'advanced',
 		label: 'Advanced',
 		color: 'var(--advanced)',
-		processors: [FINGERPRINT_PROCESSOR, BYTES_PROCESSOR]
+		processors: [FINGERPRINT_PROCESSOR, BYTES_PROCESSOR, SCRIPT_PROCESSOR]
 	},
 	{
 		key: 'conditional',
@@ -911,5 +943,6 @@ export const PROCESSORS = [
 	FAIL_PROCESSOR,
 	FINGERPRINT_PROCESSOR,
 	BYTES_PROCESSOR,
+	SCRIPT_PROCESSOR,
 	CONDITIONAL_PROCESSOR
 ];

@@ -92,7 +92,7 @@ Access the application
 | Remove | ✅ Completed
 | Remove by pattern | 🚨 Not Started
 | Rename | ✅ Completed |
-| Script | 🚨 Not Started |
+| Script | ✅ Completed |
 | Set | ✅ Completed |
 | Sparse enconding | 🚨 Not Started
 | Sort | 🚨 Not Started
