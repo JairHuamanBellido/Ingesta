@@ -32,8 +32,15 @@ export class PipelineBuilder {
 		const payload = (node.data as any).fields.reduce((acc: any, { key, value, required }: any) => {
 			const isAStringValue = typeof value === 'string';
 			const isAnArrayAndFirstValueIsNotEmpty = Array.isArray(value) && value[0];
-			const isObjectNotEmpty = typeof value === 'object' && value !== null && Object.keys(value).length > 0;
-			if ((isAStringValue && value) || isAnArrayAndFirstValueIsNotEmpty || isObjectNotEmpty) {
+			const isObjectNotEmpty =
+				typeof value === 'object' && value !== null && Object.keys(value).length > 0;
+			const isBooleanValue = typeof value === 'boolean';
+			if (
+				(isAStringValue && value) ||
+				isAnArrayAndFirstValueIsNotEmpty ||
+				isObjectNotEmpty ||
+				isBooleanValue
+			) {
 				if (key === 'pattern_definitions' || key === 'params') {
 					acc[key] = Object.fromEntries(
 						(value as string[]).map((v: any) => {
