@@ -761,7 +761,22 @@ export const FINGERPRINT_PROCESSOR = {
 			key: 'fields',
 			label: 'Fields',
 			required: true,
-			defaultValue: []
+			defaultValue: ['']
+		},
+		{
+			type: 'array',
+			key: 'exclude_fields',
+			label: 'Exclude fields',
+			required: false,
+			defaultValue: ['']
+		},
+		{
+			type: 'select',
+			key: 'hash_method',
+			label: 'Hash Method',
+			required: false,
+			defaultValue: 'SHA-1@2.16.0',
+			options: ['MD5@2.16.0', 'SHA-1@2.16.0', 'SHA-256@2.16.0', 'SHA3-256@2.16.0']
 		},
 		{
 			type: 'string',
@@ -769,21 +784,6 @@ export const FINGERPRINT_PROCESSOR = {
 			label: 'Target Field',
 			required: false,
 			defaultValue: 'fingerprint'
-		},
-		{
-			type: 'string',
-			key: 'salt',
-			label: 'Salt',
-			required: false,
-			defaultValue: ''
-		},
-		{
-			type: 'select',
-			key: 'method',
-			label: 'Method',
-			required: false,
-			defaultValue: 'SHA-1',
-			options: ['MD5', 'SHA-1', 'SHA-256', 'SHA-512', 'MurmurHash3']
 		},
 		{
 			type: 'boolean',
