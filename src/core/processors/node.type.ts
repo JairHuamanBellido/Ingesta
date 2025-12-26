@@ -23,7 +23,7 @@ export type ProcessorsNodeData = {
 
 	fields: Array<{
 		label: string;
-		value: string | Array<string> | { field: string; regex: string }[];
+		value: string | Array<string> | { key: string; value: string }[];
 		required: boolean;
 		key: string;
 		type: string;

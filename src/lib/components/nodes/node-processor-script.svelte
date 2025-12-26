@@ -20,10 +20,10 @@
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
 	const { updateNodeData } = useSvelteFlow();
-	let patternsCount = $state(0);
+	let paramsCount = $state(0);
 	$effect(() => {
-		patternsCount = Object.keys(
-			(props.data.fields.find((f) => f.key === 'patterns')?.value || {}) as {
+		paramsCount = Object.keys(
+			(props.data.fields.find((f) => f.key === 'params')?.value || {}) as {
 				[key: string]: string;
 			}
 		).length;
@@ -95,69 +95,6 @@
 						{/if}
 					</div>
 				{/if}
-				{#if field.type === 'array'}
-					<div class="space-y-1">
-						<div class="flex items-center justify-between">
-							<Label
-								for={field.key}
-								class={`text-xs font-medium text-foreground ${hasError && 'text-red-500'}`}
-								>{field.label}</Label
-							>
-							<Button
-								size="sm"
-								variant="ghost"
-								class="lg:text-xs! p-2! text-primary hover:bg-transparent! hover:text-primary"
-								onclick={() => {
-									if (field.value) {
-										updateFieldValue(field.key, [...(field.value as string[]), '']);
-									} else {
-										updateFieldValue(field.key, ['']);
-									}
-								}}
-							>
-								<Plus />
-								Add
-							</Button>
-						</div>
-						<div class="flex flex-col space-y-4">
-							{#each field.value || field.defaultValue as pattern, index}
-								<div class="flex space-x-2 items-center">
-									<Input
-										oninput={(e) => {
-											if (field.value) {
-												updateFieldValue(
-													field.key,
-													(field.value as string[]).map((p, i) =>
-														i === index ? e.currentTarget.value : p
-													)
-												);
-											} else {
-												updateFieldValue(field.key, [e.currentTarget.value]);
-											}
-										}}
-										value={pattern}
-										class={`bg-card ${hasError && index === 0 && 'border-red-500'}`}
-										placeholder={`^%{IPORHOST:clientip}`}
-									/>
-									{#if index > 0}
-										<Button
-											size="sm"
-											variant="ghost"
-											onclick={() => {
-												updateFieldValue(
-													field.key,
-													(field.value as string[]).filter((_, i) => i !== index)
-												);
-											}}
-										>
-											<Trash />
-										</Button>
-									{/if}
-								</div>
-							{/each}
-						</div>
-					</div>
-				{/if}
 				{#if field.type === 'boolean'}
 					<div class="flex items-center justify-between">
 						<Label
@@ -202,7 +139,7 @@
 							</Button>
 						</div>
 						<div class="flex flex-col space-y-4">
-							{#each field.value as { key: string; value: string }[] as pattern, index}
+							{#each field.value as { key: string; value: string }[] as parameter, index}
 								<div class="flex items-center space-x-2">
 									<Input
 										oninput={(e) => {
@@ -213,9 +150,9 @@
 												)
 											);
 										}}
-										value={pattern.key}
+										value={parameter.key}
 										class="bg-card"
-										placeholder="NUMBER"
+										placeholder="Param name"
 									/>
 									<Input
 										oninput={(e) =>
@@ -225,9 +162,9 @@
 													i === index ? { ...p, value: e.currentTarget.value } : p
 												)
 											)}
-										value={pattern.value}
+										value={parameter.value}
 										class={'bg-card'}
-										placeholder={`REGEX (\\d{3,4})`}
+										placeholder={`Param value`}
 									/>
 									<Button
 										size="sm"

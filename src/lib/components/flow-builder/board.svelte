@@ -28,6 +28,7 @@
 	import DeployPipelineButton from '../deploy-pipeline/deploy-pipeline-button.svelte';
 	import NodeProcessorCsv from '../nodes/node-processor-csv.svelte';
 	import NodeProcessorGrok from '../nodes/node-processor-grok.svelte';
+	import NodeProcessorScript from '../nodes/node-processor-script.svelte';
 
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
@@ -64,6 +65,7 @@
 		nodeProcessorFail: NodeProcessorBase,
 		nodeProcessorFingerprint: NodeProcessorBase,
 		nodeProcessorBytes: NodeProcessorBase,
+		nodeProcessorScript: NodeProcessorScript,
 		nodeConditional: NodeConditional,
 		nodeStart: NodeStart
 	};
