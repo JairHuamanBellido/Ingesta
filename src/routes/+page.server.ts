@@ -1,7 +1,7 @@
 import { PIPELINES_TEMPLATE } from '$core/pipeline/pipeline-template';
 import { createPipeline } from '../domain/use-cases/create-pipeline';
 import type { Actions } from './$types';
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
 	createPipeline: async (event) => {
@@ -25,6 +25,8 @@ export const actions = {
 
 		if (createPipelineResponse.success) {
 			redirect(302, `/pipelines/${pipelineId}`);
+		} else {
+			return fail(400, createPipelineResponse.error);
 		}
 	}
 } satisfies Actions;
