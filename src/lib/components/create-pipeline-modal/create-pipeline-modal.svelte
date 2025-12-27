@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { toast } from 'svelte-sonner';
+	import type { DexieError } from 'dexie';
+	import type { SubmitFunction } from '@sveltejs/kit';
 	import { enhance } from '$app/forms';
 	import { db } from '$infrastructure/dexie/db';
 	import * as Dialog from '$shadcn-components/dialog/index.js';
@@ -7,9 +10,60 @@
 	import Label from '$shadcn-components/label/label.svelte';
 	import PipelinesTemplate from './pipelines-template.svelte';
 	import { PIPELINES_TEMPLATE } from '$core/pipeline/pipeline-template';
-
+	import ErrorToast from '../custom-toast/error-toast.svelte';
+	import type { OpenSearchErrorDetail } from '$infrastructure/opensearch/types';
 	let loading = $state(false);
 	let selectedTemplate = $state<string>('blank');
+
+	const handler: SubmitFunction<any, { error: OpenSearchErrorDetail }> = ({ formData }) => {
+		const pipelineId = formData.get('pipelineId') as string;
+		const name = formData.get('name') as string;
+		const description = formData.get('description') as string;
+
+		loading = true;
+		const TEMPLATE = PIPELINES_TEMPLATE.find((template) => template.key === selectedTemplate);
+
+		return async ({ update, result }) => {
+			if (TEMPLATE && result.type === 'redirect') {
+				try {
+					await db.pipelines.add({
+						...TEMPLATE.pipeline,
+						key: pipelineId,
+						description,
+						name,
+						tests: []
+					});
+					await update();
+				} catch (error) {
+					const errorDexie: DexieError = error as DexieError;
+					toast(ErrorToast, {
+						style: 'padding: 0px; border:none; position:relative; width: fit-content !important;',
+						componentProps: {
+							title: errorDexie.name,
+							description: errorDexie.message,
+							code: errorDexie.inner.code
+						},
+						closeButton: true
+					});
+				} finally {
+					loading = false;
+				}
+			} else if (result.type === 'failure') {
+				loading = false;
+				const serverError = result.data;
+
+				toast(ErrorToast, {
+					style: 'padding: 0px; border:none; position:relative; width: fit-content !important;',
+					componentProps: {
+						title: serverError?.error.reason ?? '',
+						description: serverError?.error.description ?? '',
+						code: serverError?.error.code ?? ''
+					},
+					closeButton: true
+				});
+			}
+		};
+	};
 </script>
 
 <Dialog.Root>
@@ -21,33 +75,7 @@
 			<Dialog.Title>Create Pipeline</Dialog.Title>
 			<Dialog.Description>Create a new pipeline</Dialog.Description>
 		</Dialog.Header>
-		<form
-			class="space-y-4"
-			method="POST"
-			action="?/createPipeline"
-			use:enhance={({ formData }) => {
-				const pipelineId = formData.get('pipelineId') as string;
-				const name = formData.get('name') as string;
-				const description = formData.get('description') as string;
-
-				loading = true;
-				const TEMPLATE = PIPELINES_TEMPLATE.find((template) => template.key === selectedTemplate);
-
-				return async ({ update }) => {
-					if (TEMPLATE) {
-						await db.pipelines.add({
-							...TEMPLATE.pipeline,
-							key: pipelineId,
-							description,
-							name,
-							tests: []
-						});
-					}
-					await update();
-					loading = false;
-				};
-			}}
-		>
+		<form class="space-y-4" method="POST" action="?/createPipeline" use:enhance={handler}>
 			<PipelinesTemplate bind:selectedTemplate />
 			<div class="space-y-2">
 				<Label for="pipelineId">Pipeline ID</Label>

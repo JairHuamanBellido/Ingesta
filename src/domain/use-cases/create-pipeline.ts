@@ -9,6 +9,10 @@ export const createPipeline = async (payload: IPipeline) => {
 			processors: payload.processors
 		});
 
+		if (!openSearchResponse.isSuccess) {
+			return { success: false, error: openSearchResponse.data };
+		}
+
 		return { success: true, data: payload };
 	} catch (error) {
 		return { success: false, error };
