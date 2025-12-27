@@ -5,8 +5,11 @@
 	import Button from '$shadcn-components/button/button.svelte';
 	import Input from '$shadcn-components/input/input.svelte';
 	import Label from '$shadcn-components/label/label.svelte';
+	import PipelinesTemplate from './pipelines-template.svelte';
+	import { PIPELINES_TEMPLATE } from '$core/pipeline/pipeline-template';
 
-	let loading = false;
+	let loading = $state(false);
+	let selectedTemplate = $state<string>('blank');
 </script>
 
 <Dialog.Root>
@@ -28,29 +31,24 @@
 				const description = formData.get('description') as string;
 
 				loading = true;
+				const TEMPLATE = PIPELINES_TEMPLATE.find((template) => template.key === selectedTemplate);
 
 				return async ({ update }) => {
-					await db.pipelines.add({
-						edges: [],
-						nodes: [
-							{
-								id: `nodestart`,
-								type: 'nodeStart',
-								position: { x: 0, y: 0 },
-								data: {}
-							}
-						],
-						key: pipelineId,
-						description,
-						processors: [],
-						name,
-						tests: []
-					});
+					if (TEMPLATE) {
+						await db.pipelines.add({
+							...TEMPLATE.pipeline,
+							key: pipelineId,
+							description,
+							name,
+							tests: []
+						});
+					}
 					await update();
 					loading = false;
 				};
 			}}
 		>
+			<PipelinesTemplate bind:selectedTemplate />
 			<div class="space-y-2">
 				<Label for="pipelineId">Pipeline ID</Label>
 				<Input
@@ -74,6 +72,15 @@
 					placeholder="This pipeline is for..."
 				/>
 			</div>
+			<Input
+				class="hidden"
+				id="key"
+				name="key"
+				type="text"
+				required
+				placeholder="Key"
+				value={selectedTemplate}
+			/>
 			<Button disabled={loading} type="submit">{loading ? 'Loading...' : 'Create'}</Button>
 		</form>
 	</Dialog.Content>

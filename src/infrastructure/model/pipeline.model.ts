@@ -11,7 +11,7 @@ export interface IPipeline {
 }
 
 export interface IProcessor {
-	[key: string]: { [key: string]: string | boolean } | IProcessor;
+	[key: string]: { [key: string]: string | boolean | string[] } | IProcessor;
 }
 
 export interface ITest {

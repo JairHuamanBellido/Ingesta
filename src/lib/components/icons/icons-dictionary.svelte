@@ -27,7 +27,10 @@
 	import Binary from 'phosphor-svelte/lib/Binary';
 	import FlowArrow from 'phosphor-svelte/lib/FlowArrow';
 	import Code from 'phosphor-svelte/lib/Code';
-	import type { IconWeight } from 'phosphor-svelte';
+	import FileText from 'phosphor-svelte/lib/FileText';
+	import Shield from 'phosphor-svelte/lib/Shield';
+	import ShoppingCart from 'phosphor-svelte/lib/ShoppingCart';
+	import { type IconWeight } from 'phosphor-svelte';
 
 	const IconsPerSection = {
 		'data-enrichment': Sparkle,
@@ -57,7 +60,11 @@
 		fail: ExclamationMark,
 		fingerprint: Fingerprint,
 		bytes: Binary,
-		script: Code
+		script: Code,
+		blank: FileText,
+		'csv-data-parser': FileCSV,
+		'security-firewall-logs': Shield,
+		'ecommerce-event-tracking': ShoppingCart
 	};
 
 	let {
