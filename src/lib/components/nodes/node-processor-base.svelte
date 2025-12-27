@@ -17,7 +17,6 @@
 	import IconsDictionary from '../icons/icons-dictionary.svelte';
 	import { nodeStore } from '@/stores/nodeStore';
 	import Info from 'phosphor-svelte/lib/Info';
-	import DateFormatMultiSelect from '../date/date-format-multi-select.svelte';
 	import Plus from 'phosphor-svelte/lib/Plus';
 	import Trash from 'phosphor-svelte/lib/Trash';
 
@@ -102,12 +101,17 @@
 				{#if field.type === 'array'}
 					<div class="space-y-1">
 						<div class="flex items-center justify-between">
-							<Label
-								for={field.key}
-								class={`text-xs font-medium text-foreground ${hasError && 'text-red-500'}`}
-							>
-								{field.label}
-							</Label>
+							<div class="flex items-center space-x-1">
+								<Label
+									for={field.key}
+									class={`text-xs font-medium text-foreground ${hasError && 'text-red-500'}`}
+								>
+									{field.label}
+								</Label>
+								{#if field.helperText}
+									{@render tooltip(field.helperText.text, field.helperText.link)}
+								{/if}
+							</div>
 							<Button
 								size="sm"
 								variant="ghost"
@@ -161,25 +165,6 @@
 								</div>
 							{/each}
 						</div>
-					</div>
-				{/if}
-
-				{#if field.key === 'formats'}
-					<div class="space-y-1">
-						<div class="flex items-center space-x-1">
-							<Label
-								for={field.key}
-								class={`text-xs  font-medium text-foreground ${hasError && 'text-red-500'}`}
-								>{field.label}</Label
-							>
-							{#if field.helperText}
-								{@render tooltip(field.helperText.text, field.helperText.link)}
-							{/if}
-						</div>
-						<DateFormatMultiSelect {field} {updateFieldValue} {hasError} id={props.id} />
-						{#if hasError}
-							<p class="text-xs text-red-500">Please enter a value</p>
-						{/if}
 					</div>
 				{/if}
 				{#if field.type === 'boolean'}

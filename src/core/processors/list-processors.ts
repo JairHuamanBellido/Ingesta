@@ -606,7 +606,7 @@ export const DATE_PROCESSOR = {
 			key: 'formats',
 			label: 'Formats',
 			required: true,
-			defaultValue: [],
+			defaultValue: [''],
 			helperText: {
 				text: 'Learn more about supported date formats.',
 				link: 'https://docs.opensearch.org/latest/mappings/supported-field-types/date'
