@@ -31,7 +31,8 @@
 				edges: getEdges(),
 				nodes: getNodes(),
 				pipelineId: pipeline.key,
-				processors: pipelineBuilder.pipeline.processors
+				processors: pipelineBuilder.pipeline.processors,
+				simulation_input_payload: pipeline.simulation_input_payload
 			});
 
 			await axios('/', {

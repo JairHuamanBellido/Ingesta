@@ -13,7 +13,6 @@
 	import PipelineHistoryList from '$lib/components/pipelines-history-list/pipeline-history-list.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import JsonView from '$lib/components/json-viewer/json-view.svelte';
-	import { basic_template } from './simulation-list';
 
 	type ResultType = 'success' | 'failure' | 'redirect' | 'error';
 
@@ -48,10 +47,11 @@
 
 	let { pipeline }: { pipeline: IPipeline } = $props();
 	let loading = $state(false);
-	let jsonPayload = $state(basic_template);
+	let jsonPayload = $derived(pipeline.simulation_input_payload);
 	let result = $state<SuccessResult | FailureResult | ErrorResult | RedirectResult | null>(null);
 	let copiedInput = $state(false);
 	let copiedOutput = $state(false);
+	let timeout: ReturnType<typeof setTimeout>;
 
 	const copyToClipboard = (text: string, type: 'input' | 'output') => {
 		navigator.clipboard.writeText(text);
@@ -68,6 +68,10 @@
 		try {
 			const formatted = JSON.stringify(JSON.parse(jsonPayload), null, 2);
 			jsonPayload = formatted;
+			updatePipeline(pipeline.key, {
+				...pipeline,
+				simulation_input_payload: formatted
+			});
 		} catch (e) {
 			// Invalid JSON, do nothing
 		}
@@ -77,6 +81,22 @@
 		jsonPayload = '{\n  \n}';
 		result = null;
 	};
+
+	function handleInput(
+		e: Event & {
+			currentTarget: EventTarget & HTMLTextAreaElement;
+		}
+	) {
+		const target = e.currentTarget.value;
+
+		clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			updatePipeline(pipeline.key, {
+				...pipeline,
+				simulation_input_payload: target
+			});
+		}, 500);
+	}
 </script>
 
 <div
@@ -167,6 +187,7 @@
 			<div class="flex-1 overflow-auto mb-4">
 				<Textarea
 					bind:value={jsonPayload}
+					oninput={handleInput}
 					class="w-full h-full min-h-[200px] font-mono text-sm "
 					placeholder="Enter your JSON payload here..."
 					id="request-payload"
