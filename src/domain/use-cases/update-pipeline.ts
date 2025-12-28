@@ -10,7 +10,8 @@ export const updatePipeline = async (pipelineId: string, payload: IPipeline) => 
 			tests: payload.tests,
 			edges: payload.edges,
 			nodes: payload.nodes,
-			key: payload.key
+			key: payload.key,
+			simulation_input_payload: payload.simulation_input_payload
 		});
 		return { success: true, data: updatedPipeline };
 	} catch (error) {

@@ -12,6 +12,7 @@
 	import { PIPELINES_TEMPLATE } from '$core/pipeline/pipeline-template';
 	import ErrorToast from '../custom-toast/error-toast.svelte';
 	import type { OpenSearchErrorDetail } from '$infrastructure/opensearch/types';
+	import { basic_template } from '../simulation-sheet/simulation-list';
 	let loading = $state(false);
 	let selectedTemplate = $state<string>('blank');
 
@@ -31,7 +32,8 @@
 						key: pipelineId,
 						description,
 						name,
-						tests: []
+						tests: [],
+						simulation_input_payload: basic_template
 					});
 					await update();
 				} catch (error) {
