@@ -67,7 +67,7 @@
 				optionSelected === 'new-pipeline' ? newPipelineName : existingPipelineSelected;
 			toast(SuccessToastDeployPipeline, {
 				position: 'bottom-right',
-				componentProps: { pipeline },
+				componentProps: { pipeline: { ...pipeline, key: deployedPipelineId } },
 				closeButton: true
 			});
 			resetValues();
