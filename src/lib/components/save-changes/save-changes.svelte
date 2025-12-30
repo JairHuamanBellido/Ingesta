@@ -8,6 +8,7 @@
 	import { nodeStore } from '@/stores/nodeStore';
 	import { PipelineBuilder } from '$core/pipeline/pipeline-builder';
 	import ErrorToast from '../custom-toast/error-toast.svelte';
+	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	const { getNodes, getEdges } = useSvelteFlow();
 
@@ -43,6 +44,7 @@
 					processors: pipelineBuilder.pipeline.processors
 				}
 			});
+			$hasUnsavedChanges = false;
 
 			toast.success('Saved successfully');
 		} catch (error) {

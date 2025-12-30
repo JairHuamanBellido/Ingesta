@@ -13,6 +13,7 @@
 	import Switch from '$shadcn-components/switch/switch.svelte';
 	import IconsDictionary from '../icons/icons-dictionary.svelte';
 	import { nodeStore } from '@/stores/nodeStore';
+	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
@@ -33,6 +34,7 @@
 		);
 
 		updateNodeData(props.id, { ...props.data, fields: updatedFields });
+		$hasUnsavedChanges = true;
 	}
 
 	const connectionsConditionalsCount = $derived(connectionsConditionals.current.length);

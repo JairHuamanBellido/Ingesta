@@ -4,6 +4,7 @@
 	import Input from '$shadcn-components/input/input.svelte';
 	import Label from '$shadcn-components/label/label.svelte';
 	import type { ConditionalNodeData } from '$core/processors/node.type';
+	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	let { data: nodeData, isConnectable, id }: NodeProps<Node<ConditionalNodeData>> = $props();
 
@@ -11,6 +12,7 @@
 
 	function updateFieldValue(fieldKey: string, newValue: string) {
 		updateNodeData(id, { ...nodeData, [fieldKey]: newValue });
+		$hasUnsavedChanges = true;
 	}
 </script>
 

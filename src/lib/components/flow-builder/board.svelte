@@ -29,6 +29,7 @@
 	import NodeProcessorCsv from '../nodes/node-processor-csv.svelte';
 	import NodeProcessorGrok from '../nodes/node-processor-grok.svelte';
 	import NodeProcessorScript from '../nodes/node-processor-script.svelte';
+	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
@@ -103,6 +104,7 @@
 		} satisfies Node;
 
 		nodes = [...nodes, newNode];
+		$hasUnsavedChanges = true;
 	};
 
 	let colorMode: ColorMode = $state('system');
@@ -127,6 +129,7 @@
 				return Promise.resolve(false);
 			}
 		}
+		$hasUnsavedChanges = true;
 
 		return Promise.resolve(true);
 	}
@@ -137,6 +140,7 @@
 		if (!result.success) {
 			return false;
 		}
+		$hasUnsavedChanges = true;
 		return connection;
 	}
 </script>
@@ -158,6 +162,7 @@
 				<span>Configuration</span>
 			</Button>
 			<Button
+				disabled={$hasUnsavedChanges}
 				variant="outline"
 				class="flex items-center justify-center"
 				onclick={() => (currentSheetOpen = currentSheetOpen === 'simulation' ? '' : 'simulation')}

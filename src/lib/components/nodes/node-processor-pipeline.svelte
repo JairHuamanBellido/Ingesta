@@ -16,6 +16,7 @@
 	import * as Select from '$shadcn-components/select/index.js';
 	import { onMount } from 'svelte';
 	import axios from 'axios';
+	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
@@ -34,6 +35,7 @@
 		);
 
 		updateNodeData(props.id, { ...props.data, fields: updatedFields });
+		$hasUnsavedChanges = true;
 	}
 
 	const connectionsConditionalsCount = $derived(connectionsConditionals.current.length);
