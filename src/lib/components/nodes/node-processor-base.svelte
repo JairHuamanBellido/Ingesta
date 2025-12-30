@@ -19,6 +19,7 @@
 	import Info from 'phosphor-svelte/lib/Info';
 	import Plus from 'phosphor-svelte/lib/Plus';
 	import Trash from 'phosphor-svelte/lib/Trash';
+	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
@@ -36,6 +37,7 @@
 		);
 
 		updateNodeData(props.id, { ...props.data, fields: updatedFields });
+		$hasUnsavedChanges = true;
 	}
 
 	const connectionsConditionalsCount = $derived(connectionsConditionals.current.length);
