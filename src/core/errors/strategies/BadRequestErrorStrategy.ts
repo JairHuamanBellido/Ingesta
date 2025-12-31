@@ -12,7 +12,6 @@ export class BadRequestErrorStrategy implements ErrorStrategy {
 	}
 	handle(error: AxiosError): APIResult<OpenSearchErrorResponse> {
 		const axiosError = error as AxiosError<OpenSearchErrorResponse>;
-		console.log("axiosError", axiosError)
 		return {
 			isSuccess: false,
 			data: {

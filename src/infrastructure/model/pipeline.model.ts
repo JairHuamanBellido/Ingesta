@@ -8,7 +8,8 @@ export interface IPipeline {
 	edges: Array<Edge>;
 	processors: Array<IProcessor>;
 	tests: Array<ITest>;
-	simulation_input_payload: string;
+	simulation_input_payload?: string;
+	deployment_logs_index_name?: string;
 }
 
 export interface IProcessor {

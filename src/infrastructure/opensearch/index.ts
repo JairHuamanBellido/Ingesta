@@ -80,4 +80,30 @@ export class OpenSearchController {
 			return this.errorHandler.handleError(error);
 		}
 	}
+
+	static async createDeploymentHistoryIndex({ indexName }: { indexName: string }) {
+		try {
+			const deploymentsHistoryIndex = await this.axiosInstance.put(`/${indexName}`, {
+				settings: {
+					number_of_shards: 1,
+					number_of_replicas: 0
+				},
+				mappings: {
+					properties: {
+						pipeline_id: { type: 'keyword' },
+						ingest_pipeline: { type: 'object' },
+						timestamp: { type: 'date' },
+						deployment_status: { type: 'keyword' }
+					}
+				}
+			});
+			return {
+				isSuccess: true,
+				data: deploymentsHistoryIndex.data,
+				statusCode: deploymentsHistoryIndex.status
+			};
+		} catch (error) {
+			return this.errorHandler.handleError(error);
+		}
+	}
 }
