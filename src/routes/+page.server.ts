@@ -11,6 +11,9 @@ export const actions = {
 		const description = data.get('description') as string;
 		const name = data.get('name') as string;
 		const pipelineKeyTemplate = data.get('key') as string;
+		const enableDeploymentLogging = data.get('enableDeploymentLogging') as string;
+		const deployment_logs_index_name = data.get('deployment_logs_index_name') as string;
+
 		const template = PIPELINES_TEMPLATE.find((template) => template.key === pipelineKeyTemplate);
 
 		const createPipelineResponse = await createPipeline({
@@ -20,7 +23,8 @@ export const actions = {
 			description,
 			processors: template?.pipeline.processors || [],
 			name,
-			tests: []
+			tests: [],
+			...(enableDeploymentLogging === 'on' ? { deployment_logs_index_name } : {})
 		});
 
 		if (createPipelineResponse.success) {
