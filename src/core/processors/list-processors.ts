@@ -6,14 +6,6 @@ const commonParamters = [
 		required: false,
 		defaultValue: ''
 	},
-
-	{
-		type: 'string',
-		key: 'on_failure',
-		label: 'On Failure',
-		required: false,
-		defaultValue: ''
-	},
 	{
 		type: 'string',
 		key: 'tag',
@@ -32,6 +24,13 @@ const commonParamters = [
 		type: 'node',
 		key: 'if',
 		label: 'Condition',
+		required: false,
+		defaultValue: ''
+	},
+	{
+		type: 'node',
+		key: 'on_failure',
+		label: 'On Failure',
 		required: false,
 		defaultValue: ''
 	}
@@ -424,6 +423,24 @@ export const TRIM_PROCESSOR = {
 	]
 };
 
+export const PIPELINE_PROCESSOR = {
+	type: 'nodeProcessorPipeline',
+	groupKey: 'data-transformation',
+	key: 'pipeline',
+	label: 'Pipeline',
+	description: 'Executes another ingest pipeline on the document.',
+	fields: [
+		{
+			type: 'select',
+			key: 'name',
+			label: 'Name',
+			required: true,
+			defaultValue: ''
+		},
+		...commonParamters
+	]
+};
+
 // Data parsing & Extraction
 export const GROK_PROCESSOR = {
 	type: 'nodeProcessorGrok',
@@ -444,7 +461,7 @@ export const GROK_PROCESSOR = {
 			key: 'patterns',
 			label: 'Patterns',
 			required: true,
-			defaultValue: []
+			defaultValue: ['']
 		},
 		{
 			type: 'object',
@@ -457,6 +474,13 @@ export const GROK_PROCESSOR = {
 			type: 'boolean',
 			key: 'trace_match',
 			label: 'Trace Match',
+			required: false,
+			defaultValue: false
+		},
+		{
+			type: 'boolean',
+			key: 'capture_all_matches',
+			label: 'Capture All Matches',
 			required: false,
 			defaultValue: false
 		},
@@ -525,7 +549,7 @@ export const CSV_PROCESSOR = {
 			defaultValue: ''
 		},
 		{
-			type: 'array',
+			type: 'string',
 			key: 'target_fields',
 			label: 'Target Fields',
 			required: true,
@@ -540,10 +564,10 @@ export const CSV_PROCESSOR = {
 		},
 		{
 			type: 'string',
-			key: 'quote',
-			label: 'Quote',
+			key: 'empty_value',
+			label: 'Empty Value',
 			required: false,
-			defaultValue: '"'
+			defaultValue: ''
 		},
 		{
 			type: 'boolean',
@@ -551,13 +575,6 @@ export const CSV_PROCESSOR = {
 			label: 'Trim',
 			required: false,
 			defaultValue: false
-		},
-		{
-			type: 'boolean',
-			key: 'empty_value',
-			label: 'Empty Value',
-			required: false,
-			defaultValue: ''
 		},
 		{
 			type: 'boolean',
@@ -585,39 +602,47 @@ export const DATE_PROCESSOR = {
 			defaultValue: ''
 		},
 		{
-			type: 'string',
-			key: 'target_field',
-			label: 'Target Field',
-			required: false,
-			defaultValue: '@timestamp'
-		},
-		{
 			type: 'array',
 			key: 'formats',
 			label: 'Formats',
 			required: true,
-			defaultValue: []
+			defaultValue: [''],
+			helperText: {
+				text: 'Learn more about supported date formats.',
+				link: 'https://docs.opensearch.org/latest/mappings/supported-field-types/date'
+			}
+		},
+		{
+			type: 'string',
+			key: 'target_field',
+			label: 'Target Field',
+			required: false,
+			defaultValue: ''
 		},
 		{
 			type: 'string',
 			key: 'timezone',
 			label: 'Timezone',
 			required: false,
-			defaultValue: 'UTC'
+			defaultValue: ''
 		},
 		{
 			type: 'string',
 			key: 'locale',
 			label: 'Locale',
 			required: false,
-			defaultValue: 'ENGLISH'
+			defaultValue: ''
 		},
 		{
 			type: 'string',
 			key: 'output_format',
 			label: 'Output Format',
 			required: false,
-			defaultValue: ''
+			defaultValue: '',
+			helperText: {
+				text: 'Learn more about supported date formats.',
+				link: 'https://docs.opensearch.org/latest/mappings/supported-field-types/date'
+			}
 		},
 		...commonParamters
 	]
@@ -736,7 +761,22 @@ export const FINGERPRINT_PROCESSOR = {
 			key: 'fields',
 			label: 'Fields',
 			required: true,
-			defaultValue: []
+			defaultValue: ['']
+		},
+		{
+			type: 'array',
+			key: 'exclude_fields',
+			label: 'Exclude fields',
+			required: false,
+			defaultValue: ['']
+		},
+		{
+			type: 'select',
+			key: 'hash_method',
+			label: 'Hash Method',
+			required: false,
+			defaultValue: 'SHA-1@2.16.0',
+			options: ['MD5@2.16.0', 'SHA-1@2.16.0', 'SHA-256@2.16.0', 'SHA3-256@2.16.0']
 		},
 		{
 			type: 'string',
@@ -744,21 +784,6 @@ export const FINGERPRINT_PROCESSOR = {
 			label: 'Target Field',
 			required: false,
 			defaultValue: 'fingerprint'
-		},
-		{
-			type: 'string',
-			key: 'salt',
-			label: 'Salt',
-			required: false,
-			defaultValue: ''
-		},
-		{
-			type: 'select',
-			key: 'method',
-			label: 'Method',
-			required: false,
-			defaultValue: 'SHA-1',
-			options: ['MD5', 'SHA-1', 'SHA-256', 'SHA-512', 'MurmurHash3']
 		},
 		{
 			type: 'boolean',
@@ -803,6 +828,38 @@ export const BYTES_PROCESSOR = {
 	]
 };
 
+export const SCRIPT_PROCESSOR = {
+	type: 'nodeProcessorScript',
+	groupKey: 'advanced',
+	key: 'script',
+	label: 'Script',
+	description: 'Execute a script to transform the document',
+	fields: [
+		{
+			type: 'string',
+			key: 'source',
+			label: 'Source',
+			required: false,
+			defaultValue: ''
+		},
+		{
+			type: 'string',
+			key: 'lang',
+			label: 'Language',
+			required: false,
+			defaultValue: 'painless'
+		},
+		{
+			type: 'object',
+			key: 'params',
+			label: 'Parameters',
+			required: false,
+			defaultValue: {}
+		},
+		...commonParamters
+	]
+};
+
 export const CONDITIONAL_PROCESSOR = {
 	type: 'nodeConditional',
 	groupKey: 'advanced',
@@ -828,7 +885,8 @@ export const PROCESSORS_BY_CATEGORY = [
 			LOWERCASE_PROCESSOR,
 			UPPERCASE_PROCESSOR,
 			SPLIT_PROCESSOR,
-			TRIM_PROCESSOR
+			TRIM_PROCESSOR,
+			PIPELINE_PROCESSOR
 		]
 	},
 	{
@@ -853,7 +911,7 @@ export const PROCESSORS_BY_CATEGORY = [
 		key: 'advanced',
 		label: 'Advanced',
 		color: 'var(--advanced)',
-		processors: [FINGERPRINT_PROCESSOR, BYTES_PROCESSOR]
+		processors: [FINGERPRINT_PROCESSOR, BYTES_PROCESSOR, SCRIPT_PROCESSOR]
 	},
 	{
 		key: 'conditional',
@@ -874,6 +932,7 @@ export const PROCESSORS = [
 	UPPERCASE_PROCESSOR,
 	SPLIT_PROCESSOR,
 	TRIM_PROCESSOR,
+	PIPELINE_PROCESSOR,
 	GROK_PROCESSOR,
 	JSON_PROCESSOR,
 	CSV_PROCESSOR,
@@ -884,5 +943,6 @@ export const PROCESSORS = [
 	FAIL_PROCESSOR,
 	FINGERPRINT_PROCESSOR,
 	BYTES_PROCESSOR,
+	SCRIPT_PROCESSOR,
 	CONDITIONAL_PROCESSOR
 ];

@@ -5,6 +5,7 @@
 	import Label from '$shadcn-components/label/label.svelte';
 	import Input from '$shadcn-components/input/input.svelte';
 	import Switch from '$shadcn-components/switch/switch.svelte';
+	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	let { data: nodeData, isConnectable, id }: NodeProps<Node<ProcessorsNodeData>> = $props();
 
@@ -15,6 +16,7 @@
 			field.key === fieldKey ? { ...field, value: newValue } : field
 		);
 		updateNodeData(id, { ...nodeData, fields: updatedFields });
+		$hasUnsavedChanges = true;
 	}
 </script>
 

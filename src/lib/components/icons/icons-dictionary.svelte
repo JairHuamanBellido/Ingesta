@@ -25,7 +25,12 @@
 	import ExclamationMark from 'phosphor-svelte/lib/ExclamationMark';
 	import Fingerprint from 'phosphor-svelte/lib/Fingerprint';
 	import Binary from 'phosphor-svelte/lib/Binary';
-	import type { IconWeight } from 'phosphor-svelte';
+	import FlowArrow from 'phosphor-svelte/lib/FlowArrow';
+	import Code from 'phosphor-svelte/lib/Code';
+	import FileText from 'phosphor-svelte/lib/FileText';
+	import Shield from 'phosphor-svelte/lib/Shield';
+	import ShoppingCart from 'phosphor-svelte/lib/ShoppingCart';
+	import { type IconWeight } from 'phosphor-svelte';
 
 	const IconsPerSection = {
 		'data-enrichment': Sparkle,
@@ -44,6 +49,7 @@
 		lowercase: TextAA,
 		split: GitFork,
 		trim: Backspace,
+		pipeline: FlowArrow,
 		grok: ArrowSquareRight,
 		json: BracketsCurly,
 		csv: FileCSV,
@@ -53,7 +59,12 @@
 		remove: Trash,
 		fail: ExclamationMark,
 		fingerprint: Fingerprint,
-		bytes: Binary
+		bytes: Binary,
+		script: Code,
+		blank: FileText,
+		'csv-data-parser': FileCSV,
+		'security-firewall-logs': Shield,
+		'ecommerce-event-tracking': ShoppingCart
 	};
 
 	let {

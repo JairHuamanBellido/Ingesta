@@ -3,6 +3,7 @@
 	import { ModeWatcher } from 'mode-watcher';
 	import favicon from '$lib/assets/logo.svg';
 	import { Toaster } from '@/components/ui/sonner';
+	import { ERROR_TOAST_DURATION } from '@/components/custom-toast/constants';
 
 	let { children } = $props();
 </script>
@@ -17,6 +18,6 @@
 	/>
 	<title>Ingesta | OpenSearch Ingest Pipeline Builder</title>
 </svelte:head>
-<Toaster />
+<Toaster duration={ERROR_TOAST_DURATION} />
 <ModeWatcher />
 {@render children()}

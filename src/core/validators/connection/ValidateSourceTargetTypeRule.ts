@@ -21,6 +21,12 @@ export class ValidateSourceTargetTypeRule extends ValidationRule {
 		}
 
 		if (
+			connection.sourceHandle === `node-processor-${connection.source}-on-failure-source` &&
+			connection.targetHandle === `node-processor-${connection.target}-target-handle`
+		) {
+			return this.success('Processor Node only accepts connections from on failure node');
+		}
+		if (
 			connection.sourceHandle === `node-processor-${connection.source}-conditional-source` &&
 			connection.targetHandle === 'node-conditional-target-handle'
 		) {

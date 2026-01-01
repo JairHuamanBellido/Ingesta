@@ -6,12 +6,14 @@ export const saveNodesAndEdgesAndProcessors = async ({
 	edges,
 	nodes,
 	pipelineId,
-	processors
+	processors,
+	simulation_input_payload
 }: {
 	pipelineId: string;
 	nodes: Array<Node>;
 	edges: Array<Edge>;
 	processors: Array<IProcessor>;
+	simulation_input_payload: string;
 }) => {
 	const findPipeline = await db.pipelines.get(pipelineId);
 
@@ -19,7 +21,12 @@ export const saveNodesAndEdgesAndProcessors = async ({
 		throw new Error('Pipeline not found');
 	}
 
-	const updatePipeline = await db.pipelines.update(pipelineId, { nodes, edges, processors });
+	const updatePipeline = await db.pipelines.update(pipelineId, {
+		nodes,
+		edges,
+		processors,
+		simulation_input_payload
+	});
 
 	return updatePipeline;
 };

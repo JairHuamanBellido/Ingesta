@@ -7,17 +7,27 @@ export interface IPipeline {
 	nodes: Array<Node>;
 	edges: Array<Edge>;
 	processors: Array<IProcessor>;
-	tests: Array<ITests>;
+	tests: Array<ITest>;
+	simulation_input_payload?: string;
+	deployment_logs_index_name?: string;
 }
 
 export interface IProcessor {
-	[key: string]: { [key: string]: string | boolean };
+	[key: string]: { [key: string]: string | boolean | string[] } | IProcessor;
 }
 
-export interface ITests {
+export interface ITest {
 	id: string;
-	payload: JSON;
-	result: JSON;
+	input_payload: JSON;
+	result_payload: JSON;
 	timestamp: Date;
 	status_code: number;
+	request_duration: number;
+}
+
+export interface IOpensearchGetAllPipelinesResponse {
+	[key: string]: {
+		description?: string;
+		processors: Array<IProcessor>;
+	};
 }

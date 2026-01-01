@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { useSvelteFlow, getOutgoers, type Node } from '@xyflow/svelte';
-	import axios from 'axios';
-	import type { IPipeline, IProcessor } from '$infrastructure/model/pipeline.model';
-	import type { ConditionalNodeData } from '$core/processors/node.type';
+	import { useSvelteFlow } from '@xyflow/svelte';
+	import axios, { AxiosError } from 'axios';
+	import type { IPipeline } from '$infrastructure/model/pipeline.model';
 	import { saveNodesAndEdgesAndProcessors } from '$domain/use-cases/save-nodes-and-edges';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { toast } from 'svelte-sonner';
 	import { nodeStore } from '@/stores/nodeStore';
+	import { PipelineBuilder } from '$core/pipeline/pipeline-builder';
+	import ErrorToast from '../custom-toast/error-toast.svelte';
+	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	const { getNodes, getEdges } = useSvelteFlow();
 
@@ -15,49 +17,12 @@
 	const onClick = async () => {
 		try {
 			nodeStore.clear();
-			const nodesConnected = getOutgoers(
-				{ id: 'nodestart', type: 'source' },
+			const pipelineBuilder = new PipelineBuilder(
+				pipeline.description || '',
 				getNodes(),
 				getEdges()
 			);
-			const processors: IProcessor[] = [];
-			nodesConnected.forEach((node) => {
-				const nodeKey = node.data.key as string;
-
-				// get conditional node
-				const conditionalNode = getOutgoers(
-					{ id: `${node.id}`, type: 'source' },
-					getNodes(),
-					getEdges()
-				).find((n) => n.type === 'nodeConditional') as Node<ConditionalNodeData>;
-
-				// get if field
-				const ifField = (node.data as any).fields.find((f: any) => f.key === 'if');
-
-				if (ifField) {
-					ifField.value = conditionalNode?.data?.condition || undefined;
-				}
-
-				// sanitize processor fields or parameters
-				const objected = (node.data as any).fields.reduce(
-					(acc: any, { key, value, required }: any) => {
-						if (value) acc[key] = value;
-						else if (required) {
-							nodeStore.update((nodes) => ({
-								...nodes,
-								[node.id]: { ...nodes[node.id], [key]: { hasError: true } }
-							}));
-						}
-						return acc;
-					},
-					{}
-				);
-
-				processors.push({
-					[nodeKey]: objected
-				});
-			});
-
+			pipelineBuilder.build();
 			if (Object.keys(nodeStoreData).length > 0) {
 				toast.error('Please fill all required fields');
 				return;
@@ -67,7 +32,8 @@
 				edges: getEdges(),
 				nodes: getNodes(),
 				pipelineId: pipeline.key,
-				processors
+				processors: pipelineBuilder.pipeline.processors,
+				simulation_input_payload: pipeline.simulation_input_payload
 			});
 
 			await axios('/', {
@@ -75,13 +41,28 @@
 				data: {
 					key: pipeline.key,
 					description: pipeline.description,
-					processors
+					processors: pipelineBuilder.pipeline.processors
 				}
 			});
+			$hasUnsavedChanges = false;
 
 			toast.success('Saved successfully');
 		} catch (error) {
-			toast.error('Something went wrong');
+			if (error instanceof AxiosError) {
+				const rootCause = error.response?.data?.data?.error.root_cause?.[0];
+
+				toast(ErrorToast, {
+					style: 'padding: 0px; border:none; position:relative; width: fit-content !important;',
+					componentProps: {
+						title: `[${rootCause.processor_type.toUpperCase()}] ${rootCause?.type}`,
+						description: `${rootCause?.reason}`,
+						code: error.code ?? ''
+					},
+					closeButton: true
+				});
+			} else {
+				toast.error('Something went wrong');
+			}
 		}
 	};
 </script>

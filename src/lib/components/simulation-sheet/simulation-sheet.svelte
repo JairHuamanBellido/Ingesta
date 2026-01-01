@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { IPipeline } from '$infrastructure/model/pipeline.model';
+	import { Play, Copy, Check } from '@lucide/svelte';
+	import WarningCircle from 'phosphor-svelte/lib/WarningCircle';
+	import CheckCircle from 'phosphor-svelte/lib/CheckCircle';
+	import Clock from 'phosphor-svelte/lib/Clock';
+	import ClockCounterClockwise from 'phosphor-svelte/lib/ClockCounterClockwise';
+	import type { IPipeline, ITest } from '$infrastructure/model/pipeline.model';
+	import { updatePipeline } from '$domain/use-cases/update-pipeline';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import PipelineHistoryList from '$lib/components/pipelines-history-list/pipeline-history-list.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-	import { Play, Copy, Check, ChevronDown, AlertCircle, CheckCircle2, Clock } from '@lucide/svelte';
-	import { basic_template } from './simulation-list';
+	import JsonView from '$lib/components/json-viewer/json-view.svelte';
 
 	type ResultType = 'success' | 'failure' | 'redirect' | 'error';
 
@@ -38,20 +45,13 @@
 		data: { error: string };
 	}
 
-	interface Example {
-		name: string;
-		payload: string;
-	}
-
 	let { pipeline }: { pipeline: IPipeline } = $props();
 	let loading = $state(false);
-	let jsonPayload = $state(basic_template);
+	let jsonPayload = $derived(pipeline.simulation_input_payload);
 	let result = $state<SuccessResult | FailureResult | ErrorResult | RedirectResult | null>(null);
 	let copiedInput = $state(false);
 	let copiedOutput = $state(false);
-	let showExamples = $state(false);
-
-	// const examples: Example[] = [];
+	let timeout: ReturnType<typeof setTimeout>;
 
 	const copyToClipboard = (text: string, type: 'input' | 'output') => {
 		navigator.clipboard.writeText(text);
@@ -68,6 +68,10 @@
 		try {
 			const formatted = JSON.stringify(JSON.parse(jsonPayload), null, 2);
 			jsonPayload = formatted;
+			updatePipeline(pipeline.key, {
+				...pipeline,
+				simulation_input_payload: formatted
+			});
 		} catch (e) {
 			// Invalid JSON, do nothing
 		}
@@ -78,11 +82,21 @@
 		result = null;
 	};
 
-	const loadExample = (example: Example) => {
-		jsonPayload = example.payload;
-		showExamples = false;
-		result = null;
-	};
+	function handleInput(
+		e: Event & {
+			currentTarget: EventTarget & HTMLTextAreaElement;
+		}
+	) {
+		const target = e.currentTarget.value;
+
+		clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			updatePipeline(pipeline.key, {
+				...pipeline,
+				simulation_input_payload: target
+			});
+		}, 500);
+	}
 </script>
 
 <div
@@ -98,30 +112,6 @@
 
 	<!-- Actions Bar -->
 	<div class="flex items-center gap-2 px-4 py-2 border-b">
-		<!-- <div class="relative">
-			<button
-				type="button"
-				onclick={() => (showExamples = !showExamples)}
-				class="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded transition-colors"
-			>
-				Examples <ChevronDown class="w-3 h-3" />
-			</button>
-			{#if showExamples}
-				<div
-					class="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10"
-				>
-					{#each examples as example}
-						<button
-							type="button"
-							onclick={() => loadExample(example)}
-							class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 first:rounded-t-lg last:rounded-b-lg transition-colors"
-						>
-							{example.name}
-						</button>
-					{/each}
-				</div>
-			{/if}
-		</div> -->
 		<button
 			type="button"
 			onclick={formatJSON}
@@ -138,7 +128,7 @@
 		</button>
 	</div>
 
-	<div class="flex flex-col overflow-hidden">
+	<div class="flex flex-col overflow-auto">
 		<!-- Input Section -->
 		<div class="flex flex-col bg-muted">
 			<div class="flex items-center justify-between px-4 py-2 border-b">
@@ -176,6 +166,20 @@
 						data
 					};
 					update({ reset: false });
+
+					const newTest: ITest = {
+						id: window.crypto.randomUUID(),
+						input_payload: JSON.parse(jsonPayload),
+						result_payload: data.isSuccess ? data.openSearchResponse : data.error,
+						timestamp: new Date(),
+						status_code: status,
+						request_duration: data.request_duration
+					};
+
+					await updatePipeline(pipeline.key, {
+						...pipeline,
+						tests: [...pipeline.tests, newTest]
+					});
 					loading = false;
 				};
 			}}
@@ -183,6 +187,7 @@
 			<div class="flex-1 overflow-auto mb-4">
 				<Textarea
 					bind:value={jsonPayload}
+					oninput={handleInput}
 					class="w-full h-full min-h-[200px] font-mono text-sm "
 					placeholder="Enter your JSON payload here..."
 					id="request-payload"
@@ -210,81 +215,98 @@
 
 		<!-- Output Section -->
 		<div class="flex flex-col min-h-0">
-			<div class="flex items-center justify-between px-4 py-2 border-b bg-muted">
-				<div class="flex items-center gap-2">
-					<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Output</span>
-					{#if result}
+			<Tabs.Root value="item-1">
+				<Tabs.List class="flex items-center justify-between border-b bg-muted w-full rounded-none">
+					<Tabs.Trigger value="item-1">Output</Tabs.Trigger>
+					<Tabs.Trigger value="item-2">
+						<ClockCounterClockwise />
+						<p>
+							History {pipeline.tests.length}
+						</p>
+					</Tabs.Trigger>
+				</Tabs.List>
+				<Tabs.Content value="item-1">
+					<div class="flex items-center justify-between px-4 py-2 border-b bg-muted">
 						<div class="flex items-center gap-2">
-							{#if result.type === 'success'}
-								<span
-									class="flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-medium rounded-full"
-								>
-									<CheckCircle2 class="w-3 h-3" />
-									{result.status} OK
-								</span>
-							{:else}
-								<span
-									class="flex items-center gap-1 px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-medium rounded-full"
-								>
-									<AlertCircle class="w-3 h-3" />
-									{result.status} ERROR
-								</span>
-							{/if}
-							{#if result.type === 'success'}
-								<span class="flex items-center text-muted-foreground gap-1 text-xs">
-									<Clock class="w-3 h-3" />
-									{result.data.request_duration}ms
-								</span>
+							<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Output</span>
+							{#if result}
+								<div class="flex items-center gap-2">
+									{#if result.type === 'success'}
+										<span
+											class="flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-medium rounded-full"
+										>
+											<CheckCircle size={12} />
+											{result.status} OK
+										</span>
+									{:else}
+										<span
+											class="flex items-center gap-1 px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-medium rounded-full"
+										>
+											<WarningCircle weight="bold" size={12} />
+											{result.status} BAD REQUEST
+										</span>
+									{/if}
+									{#if result.type === 'success'}
+										<span class="flex items-center text-muted-foreground gap-1 text-xs">
+											<Clock class="w-3 h-3" />
+											{result.data.request_duration}ms
+										</span>
+									{/if}
+								</div>
 							{/if}
 						</div>
-					{/if}
-				</div>
-				{#if result}
-					<Button
-						variant="ghost"
-						onclick={() =>
-							copyToClipboard(
-								JSON.stringify(
-									result?.type === 'success' ? result.data.openSearchResponse : result?.data,
-									null,
-									2
-								),
-								'output'
-							)}
-						class="flex items-center h-6 gap-1 px-2! py-1! text-xs! text-muted-foreground transition-colors"
-					>
-						{#if copiedOutput}
-							<Check class="w-3! h-3! text-green-600" />
-							<span class="text-green-600">Copied</span>
-						{:else}
-							<Copy class="w-3! h-3!" />
-							Copy
+						{#if result}
+							<Button
+								variant="ghost"
+								onclick={() =>
+									copyToClipboard(
+										JSON.stringify(
+											result?.type === 'success' ? result.data.openSearchResponse : result?.data,
+											null,
+											2
+										),
+										'output'
+									)}
+								class="flex items-center h-6 gap-1 px-2! py-1! text-xs! text-muted-foreground transition-colors"
+							>
+								{#if copiedOutput}
+									<Check class="w-3! h-3! text-green-600" />
+									<span class="text-green-600">Copied</span>
+								{:else}
+									<Copy size={12} />
+									Copy
+								{/if}
+							</Button>
 						{/if}
-					</Button>
-				{/if}
-			</div>
-			<div class="overflow-auto p-4">
-				{#if result}
-					{#if result.type === 'success'}
-						<pre
-							class="font-mono text-sm border bg-transparent dark:bg-input/30 rounded-lg p-4 overflow-auto"><code
-								>{JSON.stringify(result.data.openSearchResponse, null, 2)}</code
-							></pre>
-					{:else}
-						<pre class="font-mono text-sm bg-transparent rounded-lg p-4 overflow-auto"><code
-								class="text-gray-800 dark:text-gray-200"
-								>{JSON.stringify(result.data, null, 2)}</code
-							></pre>
-					{/if}
-				{:else}
-					<div class="flex items-center justify-center h-full text-gray-400 mt-8">
-						<div class="text-center">
-							<Play class="w-12 h-12 mx-auto mb-2 opacity-50" />
-							<p class="text-sm">Run simulation to see output</p>
+					</div>
+					<div class="overflow-auto p-4">
+						{#if result}
+							{#if result.type === 'success'}
+								<JsonView json={result.data.openSearchResponse as unknown as JSON} />
+							{:else}
+								<JsonView json={result.data as unknown as JSON} />
+							{/if}
+						{:else}
+							<div class="flex items-center justify-center h-full text-gray-400 mt-8">
+								<div class="text-center">
+									<Play class="w-12 h-12 mx-auto mb-2 opacity-50" />
+									<p class="text-sm">Run simulation to see output</p>
+								</div>
+							</div>
+						{/if}
+					</div>
+				</Tabs.Content>
+				<Tabs.Content value="item-2">
+					<div class="flex items-center px-4 py-2 border-b bg-muted">
+						<div class="flex items-center gap-2">
+							<span class="text-sm font-medium text-gray-700 dark:text-gray-300"
+								>Tests simulations</span
+							>
 						</div>
 					</div>
-				{/if}
-			</div>
+					<PipelineHistoryList tests={pipeline.tests} />
+				</Tabs.Content>
+			</Tabs.Root>
 		</div>
 	</div>
 </div>

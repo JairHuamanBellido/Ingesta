@@ -26,13 +26,28 @@ A Svelte-based visual workflow builder for creating and managing OpenSearch inge
 - OpenSearch instance (for testing and simulation)
 - Docker (for local development)
 
-### Installation
+### Run with Docker
 
+#### Development mode
 ```sh
-docker compose up
+docker compose up -d
 ```
+Access the application
+- Pipeline Builder: http://localhost:5173
+- OpenSearch API: http://localhost:9200
+- OpenSearch Dashboards: http://localhost:5601
 
-🔨 WORK IN PROGRESS
+
+#### Production Deployment
+```sh
+docker compose -f compose.prod.yaml up -d --build
+```
+Access the application
+- Pipeline Builder: http://localhost:3000
+- OpenSearch API: http://localhost:9200
+- OpenSearch Dashboards: http://localhost:5601
+
+
 
 ## 🚧 Development Roadmap
 
@@ -77,7 +92,7 @@ docker compose up
 | Remove | ✅ Completed
 | Remove by pattern | 🚨 Not Started
 | Rename | ✅ Completed |
-| Script | 🚨 Not Started |
+| Script | ✅ Completed |
 | Set | ✅ Completed |
 | Sparse enconding | 🚨 Not Started
 | Sort | 🚨 Not Started

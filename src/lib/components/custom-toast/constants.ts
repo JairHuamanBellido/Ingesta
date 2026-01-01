@@ -1,0 +1,1 @@
+export const ERROR_TOAST_DURATION = 15000;

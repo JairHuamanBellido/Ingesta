@@ -1,53 +1,19 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance } from 'axios';
-import https from 'node:https';
-import type { IProcessor } from '$infrastructure/model/pipeline.model';
+import type {
+	IOpensearchGetAllPipelinesResponse,
+	IProcessor
+} from '$infrastructure/model/pipeline.model';
 import type { OpenSearchErrorResponse, OpenSearchOperationResponse } from './types';
 import type { APIResult } from '$core/axios/types';
-import {   OPENSEARCH_PASSWORD, OPENSEARCH_URL,OPENSEARCH_USERNAME } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+import { ErrorHandlerService } from '$core/errors/error-handler';
 
 export class OpenSearchController {
 	private static axiosInstance: AxiosInstance = axios.create({
-		baseURL: OPENSEARCH_URL,
-		auth: {
-			username: OPENSEARCH_USERNAME || '',
-			password: OPENSEARCH_PASSWORD || ''
-		},
-		httpsAgent: new https.Agent({
-			rejectUnauthorized: false
-		})
+		baseURL: env.OPENSEARCH_URL
 	});
-
-	private static handleError(error: unknown): APIResult<OpenSearchErrorResponse> {
-		if (error instanceof AxiosError) {
-			const openSearchError: AxiosError<OpenSearchErrorResponse> = error;
-			return {
-				isSuccess: false,
-				data: {
-					error: {
-						reason: openSearchError.response?.data.error.reason ?? '',
-						type: openSearchError.response?.data.error.type ?? '',
-						processor_type: openSearchError.response?.data.error.processor_type ?? '',
-						property_name: openSearchError.response?.data.error.property_name ?? '',
-						root_cause: openSearchError.response?.data.error.root_cause ?? []
-					}
-				},
-				statusCode: openSearchError.response?.status || 500
-			};
-		}
-		return {
-			isSuccess: false,
-			data: {
-				error: {
-					reason: error as string,
-					type: 'Internal Server Error',
-					property_name: 'create_pipeline',
-					root_cause: []
-				}
-			},
-			statusCode: 500
-		};
-	}
+	private static errorHandler: ErrorHandlerService = new ErrorHandlerService();
 
 	static async createPipeline({
 		description,
@@ -72,11 +38,72 @@ export class OpenSearchController {
 				statusCode: response.status
 			};
 		} catch (error) {
-			return this.handleError(error);
+			return this.errorHandler.handleError(error);
 		}
 	}
 
 	static async simulatePipeline({ payload, pipelineId }: { pipelineId: string; payload: JSON }) {
 		return await this.axiosInstance.post(`_ingest/pipeline/${pipelineId}/_simulate`, payload);
+	}
+
+	static async getAllPipelines(): Promise<
+		APIResult<IOpensearchGetAllPipelinesResponse | OpenSearchErrorResponse>
+	> {
+		try {
+			const pipelines =
+				await this.axiosInstance.get<IOpensearchGetAllPipelinesResponse>('/_ingest/pipeline');
+
+			return {
+				isSuccess: true,
+				data: pipelines.data,
+				statusCode: pipelines.status
+			};
+		} catch (error) {
+			return this.errorHandler.handleError(error);
+		}
+	}
+
+	static async getPipelineById(
+		id: string
+	): Promise<APIResult<IOpensearchGetAllPipelinesResponse | OpenSearchErrorResponse>> {
+		try {
+			const pipeline = await this.axiosInstance.get<IOpensearchGetAllPipelinesResponse>(
+				`/_ingest/pipeline/${id}`
+			);
+
+			return {
+				isSuccess: true,
+				data: pipeline.data,
+				statusCode: pipeline.status
+			};
+		} catch (error) {
+			return this.errorHandler.handleError(error);
+		}
+	}
+
+	static async createDeploymentHistoryIndex({ indexName }: { indexName: string }) {
+		try {
+			const deploymentsHistoryIndex = await this.axiosInstance.put(`/${indexName}`, {
+				settings: {
+					number_of_shards: 1,
+					number_of_replicas: 0
+				},
+				mappings: {
+					properties: {
+						pipeline_id: { type: 'keyword' },
+						ingest_pipeline: { type: 'object' },
+						timestamp: { type: 'date' },
+						deployment_status: { type: 'keyword' }
+					}
+				}
+			});
+			return {
+				isSuccess: true,
+				data: deploymentsHistoryIndex.data,
+				statusCode: deploymentsHistoryIndex.status
+			};
+		} catch (error) {
+			return this.errorHandler.handleError(error);
+		}
 	}
 }
