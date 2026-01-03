@@ -1,4 +1,5 @@
 import { PIPELINES_TEMPLATE } from '$core/pipeline/pipeline-template';
+import { basic_template } from '@/components/simulation-sheet/simulation-list';
 import { createPipeline } from '../domain/use-cases/create-pipeline';
 import type { Actions } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
@@ -12,10 +13,8 @@ export const actions = {
 		const name = data.get('name') as string;
 		const pipelineKeyTemplate = data.get('key') as string;
 		const enableDeploymentLogging = data.get('enableDeploymentLogging') as string;
-		const deployment_logs_index_name = data.get('deployment_logs_index_name') as string;
 
 		const template = PIPELINES_TEMPLATE.find((template) => template.key === pipelineKeyTemplate);
-
 		const createPipelineResponse = await createPipeline({
 			edges: [],
 			nodes: [],
@@ -24,7 +23,10 @@ export const actions = {
 			processors: template?.pipeline.processors || [],
 			name,
 			tests: [],
-			...(enableDeploymentLogging === 'on' ? { deployment_logs_index_name } : {})
+			simulation_input_payload: basic_template,
+			...(enableDeploymentLogging === 'on'
+				? { deployment_logs_index_name: `ingesta-${pipelineId}-deployment-logs` }
+				: {})
 		});
 
 		if (createPipelineResponse.success) {

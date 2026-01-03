@@ -1,3 +1,5 @@
+import type { IProcessor } from '$infrastructure/model/pipeline.model';
+
 /**
  * OpenSearch Error Details
  */
@@ -27,7 +29,6 @@ export interface OpenSearchOperationResponse {
 	acknowledged: boolean;
 }
 
-
 /**
  * Opensearch Simulate Response
  */
@@ -35,4 +36,31 @@ export interface OpenSearchSimulateResponse {
 	docs: Array<{
 		doc: any;
 	}>;
+}
+
+export interface IDeploymentLogs {
+	pipeline_id: string;
+	ingest_pipeline: {
+		description?: string;
+		processors: Array<IProcessor>;
+	};
+	deployment_status: string;
+	is_rollback: boolean;
+	timestamp: Date;
+}
+
+/**
+ * Opensearch Search Response
+ */
+
+export interface OpensearchSearchResponse<T = any> {
+	hits: {
+		total: {
+			value: number;
+		};
+		hits: Array<{
+			_id: string;
+			_source: T;
+		}>;
+	};
 }

@@ -17,13 +17,13 @@
 	import Info from 'phosphor-svelte/lib/Info';
 	let loading = $state(false);
 	let selectedTemplate = $state<string>('blank');
+	let pipelineKey = $state<string>('');
 	let enableDeploymentLogging = $state<boolean>(false);
 
 	const handler: SubmitFunction<any, { error: OpenSearchErrorDetail }> = ({ formData }) => {
 		const pipelineId = formData.get('pipelineId') as string;
 		const name = formData.get('name') as string;
 		const description = formData.get('description') as string;
-		const deployment_logs_index_name = formData.get('deployment_logs_index_name') as string;
 
 		loading = true;
 		const TEMPLATE = PIPELINES_TEMPLATE.find((template) => template.key === selectedTemplate);
@@ -38,7 +38,9 @@
 						name,
 						tests: [],
 						simulation_input_payload: basic_template,
-						deployment_logs_index_name
+						...(enableDeploymentLogging
+							? { deployment_logs_index_name: `ingesta-${pipelineId}-deployment-logs` }
+							: {})
 					});
 					await update();
 				} catch (error) {
@@ -90,6 +92,7 @@
 					id="pipelineId"
 					name="pipelineId"
 					type="text"
+					bind:value={pipelineKey}
 					required
 					placeholder="my-first-pipeline"
 				/>
@@ -150,8 +153,10 @@
 										id="deployment_logs_index_name"
 										name="deployment_logs_index_name"
 										type="text"
+										value={`ingesta-${pipelineKey}-deployment-logs`}
 										required
 										placeholder="pipeline-deployment-logs-my-first-pipeline"
+										disabled
 									/>
 								</div>
 							</div>

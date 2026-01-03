@@ -1,10 +1,15 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 import type {
 	IOpensearchGetAllPipelinesResponse,
 	IProcessor
 } from '$infrastructure/model/pipeline.model';
-import type { OpenSearchErrorResponse, OpenSearchOperationResponse } from './types';
+import {
+	type IDeploymentLogs,
+	type OpenSearchErrorResponse,
+	type OpenSearchOperationResponse,
+	type OpensearchSearchResponse
+} from './types';
 import type { APIResult } from '$core/axios/types';
 import { env } from '$env/dynamic/private';
 import { ErrorHandlerService } from '$core/errors/error-handler';
@@ -93,7 +98,8 @@ export class OpenSearchController {
 						pipeline_id: { type: 'keyword' },
 						ingest_pipeline: { type: 'object' },
 						timestamp: { type: 'date' },
-						deployment_status: { type: 'keyword' }
+						deployment_status: { type: 'keyword' },
+						is_rollback: { type: 'boolean' }
 					}
 				}
 			});
@@ -101,6 +107,66 @@ export class OpenSearchController {
 				isSuccess: true,
 				data: deploymentsHistoryIndex.data,
 				statusCode: deploymentsHistoryIndex.status
+			};
+		} catch (error) {
+			return this.errorHandler.handleError(error);
+		}
+	}
+
+	static async insertDeploxymentRecord({
+		indexName,
+		pipelineId,
+		ingestPipeline,
+		deploymentStatus,
+		isRollback
+	}: {
+		indexName: string;
+		pipelineId: string;
+		ingestPipeline: any;
+		deploymentStatus: string;
+		isRollback: boolean;
+	}) {
+		try {
+			const response = await this.axiosInstance.post(`/${indexName}/_doc?refresh=wait_for`, {
+				pipeline_id: pipelineId,
+				ingest_pipeline: ingestPipeline,
+				is_rollback: isRollback,
+				timestamp: new Date().toISOString(),
+				deployment_status: deploymentStatus
+			});
+			return {
+				isSuccess: true,
+				data: response.data,
+				statusCode: response.status
+			};
+		} catch (error) {
+			return this.errorHandler.handleError(error);
+		}
+	}
+
+	static async getDeploymentsLogs({ index }: { index: string }) {
+		try {
+			const response = await this.axiosInstance.get<OpensearchSearchResponse<IDeploymentLogs>>(
+				`/ingesta-${index}-deployment-logs/_search`,
+				{
+					data: {
+						sort: [
+							{
+								timestamp: {
+									order: 'desc'
+								}
+							}
+						],
+
+						query: { match_all: {} }
+					}
+				}
+			);
+
+			return {
+				isSuccess: true,
+				data: response.data,
+				statusCode: response.status
 			};
 		} catch (error) {
 			return this.errorHandler.handleError(error);

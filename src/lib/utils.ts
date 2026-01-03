@@ -11,6 +11,7 @@ export function cleanObject(obj: any) {
 
 export function formatDate(date: Date) {
 	return date.toLocaleString('en-US', {
+		year: 'numeric',
 		month: 'short',
 		day: 'numeric',
 		hour: '2-digit',

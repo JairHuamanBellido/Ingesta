@@ -63,6 +63,18 @@
 				description: pipeline.description || '',
 				processors: pipeline.processors
 			});
+
+			if (pipeline.deployment_logs_index_name) {
+				await axios.post(`/pipelines/${pipeline.key}/deploy`, {
+					deploy_index_name: pipeline.key,
+					pipeline_id:
+						optionSelected === 'new-pipeline' ? newPipelineName : existingPipelineSelected,
+					deployment_status: 'success',
+					ingest_pipeline: { description: pipeline.description, processors: pipeline.processors },
+					is_rollback: false,
+				});
+			}
+
 			deployedPipelineId =
 				optionSelected === 'new-pipeline' ? newPipelineName : existingPipelineSelected;
 			toast(SuccessToastDeployPipeline, {
@@ -141,9 +153,9 @@
 				<RadioGroup.Item class="mt-1" value="existing-pipeline" id="existing-pipeline" />
 				<Label class="block cursor-pointer w-full!" for="existing-pipeline">
 					<div class="flex flex-col">
-						<p class="text-base font-medium">Create new pipeline</p>
+						<p class="text-base font-medium">Update existing pipeline</p>
 						<p class="text-sm text-muted-foreground">
-							Deploy configuration to a new ingest pipeline
+							Replace the configuration of an existing pipeline
 						</p>
 						{#if optionSelected === 'existing-pipeline'}
 							<Select.Root type="single" bind:value={existingPipelineSelected}>
