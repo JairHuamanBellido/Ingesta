@@ -37,7 +37,7 @@
 			await axios.post(`/pipelines/${pipeline.key}/deploy`, {
 				pipeline_id: log.pipeline_id,
 				ingest_pipeline: log.ingest_pipeline,
-				deployment_status: 'rollback',
+				deployment_status: 'success',
 				is_rollback: true,
 				deploy_index_name: pipeline.key
 			});
