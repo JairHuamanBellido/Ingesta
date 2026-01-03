@@ -1,4 +1,5 @@
 import type { IPipeline } from '$infrastructure/model/pipeline.model';
+import { basic_template } from '@/components/simulation-sheet/simulation-list';
 
 interface IPipelineTemplate {
 	key: string;
@@ -16,9 +17,11 @@ const BLANK_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' | 'name'> 
 			data: {}
 		}
 	],
-	processors: []
+	processors: [],
+	simulation_input_payload: basic_template
 };
 const CSV_DATA_PARSER_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' | 'name'> = {
+	simulation_input_payload: basic_template,
 	edges: [
 		{
 			source: 'nodestart',
@@ -371,6 +374,7 @@ const CSV_DATA_PARSER_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' 
 };
 
 const SECURITY_FIREWALL_LOGS_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' | 'name'> = {
+	simulation_input_payload: basic_template,
 	edges: [
 		{
 			source: 'nodestart',
@@ -842,6 +846,7 @@ const SECURITY_FIREWALL_LOGS_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'descri
 
 const ECOMMERCE_EVENT_TRACKING_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' | 'name'> =
 	{
+		simulation_input_payload: basic_template,
 		edges: [
 			{
 				source: 'nodestart',

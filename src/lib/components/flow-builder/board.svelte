@@ -30,6 +30,7 @@
 	import NodeProcessorGrok from '../nodes/node-processor-grok.svelte';
 	import NodeProcessorScript from '../nodes/node-processor-script.svelte';
 	import { hasUnsavedChanges } from '@/stores/dirty';
+	import DeploymentLogsButton from '../deployment-logs/deployment-logs-button.svelte';
 
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
@@ -172,6 +173,7 @@
 			</Button>
 			<SaveChanges {pipeline} />
 			<DeployPipelineButton {pipeline} />
+			<DeploymentLogsButton key={pipeline.key} />
 		</div>
 	</div>
 	<div class="w-full relative h-full flex">
