@@ -29,7 +29,7 @@
 			<p class="font-semibold text-sm">Processors ({pipeline.processors.length})</p>
 		</div>
 		<div>
-			{#each pipeline.processors as processor}
+			{#each pipeline.processors as processor(`pipeline-processor-${processor.type}`)}
 				<div class="bg-muted p-2 rounded">
 					<p>{Object.keys(processor)[0]}</p>
 				</div>
@@ -43,7 +43,7 @@
 			<p class="font-semibold text-sm">Tests ({pipeline.tests.length})</p>
 		</div>
 		<div>
-			{#each pipeline.tests as test}
+			{#each pipeline.tests as test(`pipeline-test-${test.id}`)}
 				<div class="bg-muted p-2 rounded">
 					<p>{test.id}</p>
 				</div>

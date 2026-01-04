@@ -53,7 +53,7 @@ export interface IDeploymentLogs {
  * Opensearch Search Response
  */
 
-export interface OpensearchSearchResponse<T = any> {
+export interface OpensearchSearchResponse<T> {
 	hits: {
 		total: {
 			value: number;

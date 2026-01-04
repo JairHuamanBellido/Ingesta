@@ -1,3 +1,4 @@
+import type { IProcessor } from '$infrastructure/model/pipeline.model';
 import { OpenSearchController } from '$infrastructure/opensearch';
 import { json } from '@sveltejs/kit';
 
@@ -6,7 +7,7 @@ export async function POST({ request }: { request: Request }) {
 		deploy_index_name: string;
 		pipeline_id: string;
 		deployment_status: string;
-		ingest_pipeline: JSON | object;
+		ingest_pipeline: { description: string; processors: Array<IProcessor> };
 		is_rollback: boolean;
 	};
 

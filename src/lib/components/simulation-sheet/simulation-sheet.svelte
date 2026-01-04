@@ -21,7 +21,7 @@
 		status: number;
 		data: {
 			statusCode: number;
-			openSearchResponse: Object;
+			openSearchResponse: object;
 			request_duration: number;
 			isSuccess: boolean;
 		};
@@ -73,6 +73,7 @@
 				simulation_input_payload: formatted
 			});
 		} catch (e) {
+			console.error(e);
 			// Invalid JSON, do nothing
 		}
 	};
@@ -154,7 +155,7 @@
 			method="POST"
 			action="?/simulate"
 			class="px-4 py-3 border-b border-border"
-			use:enhance={({ formData }) => {
+			use:enhance={() => {
 				loading = true;
 				return async ({ update, result: response }) => {
 					const type = response.type as ResultType;
@@ -165,6 +166,7 @@
 						status,
 						data
 					};
+
 					update({ reset: false });
 
 					const newTest: ITest = {

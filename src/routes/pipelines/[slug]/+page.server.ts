@@ -18,7 +18,7 @@ export const actions = {
 			const request_end_at = Date.now();
 			const request_duration = request_end_at - request_start_at;
 			const openSearchResponse = simulateResponse.data;
-			if (!!simulateResponse.data.docs[0]['error']) {
+			if (simulateResponse.data.docs[0]['error']) {
 				return fail(400, { error: openSearchResponse, request_duration });
 			}
 

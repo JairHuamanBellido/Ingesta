@@ -12,7 +12,7 @@
 </script>
 
 <Accordion.Root class="w-full p-4" type="multiple">
-	{#each tests as test, index}
+	{#each tests as test, index(`pipeline-history-${test.id}`)}
 		<Accordion.Item value={test.id}>
 			<Accordion.Trigger class="hover:no-underline no-underline cursor-pointer">
 				<div class="flex flex-col space-y-2">

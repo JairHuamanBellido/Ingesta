@@ -15,7 +15,7 @@
 	import SpinnerGap from 'phosphor-svelte/lib/SpinnerGap';
 
 	let pipeline: { key: string } = $props();
-	let isOpen = $state(true);
+	let isOpen = $state(false);
 	let loading = $state(false);
 	let deploymentLogs = $state<OpensearchSearchResponse<IDeploymentLogs>>({
 		hits: { hits: [], total: { value: 0 } }

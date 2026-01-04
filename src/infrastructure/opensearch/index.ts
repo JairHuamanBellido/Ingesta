@@ -122,7 +122,7 @@ export class OpenSearchController {
 	}: {
 		indexName: string;
 		pipelineId: string;
-		ingestPipeline: any;
+		ingestPipeline: { description: string; processors: Array<IProcessor> };
 		deploymentStatus: string;
 		isRollback: boolean;
 	}) {

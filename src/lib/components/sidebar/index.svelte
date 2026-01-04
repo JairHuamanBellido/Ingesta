@@ -26,7 +26,7 @@
 	<div class="nodes-list">
 		<p class="font-semibold text-lg mb-4">Processors</p>
 		<ul class="space-y-2">
-			{#each PROCESSORS_BY_CATEGORY as category}
+			{#each PROCESSORS_BY_CATEGORY as category(`sidebar-${category.key}`)}
 				<Root value={[category.key]} type="multiple">
 					<Item value={category.key}>
 						<Trigger class="flex items-center hover:no-underline cursor-pointer">
@@ -44,7 +44,7 @@
 							</div>
 						</Trigger>
 						<Content class="space-y-4">
-							{#each category.processors as processor}
+							{#each category.processors as processor(`sidebar-processor-${processor.type}`)}
 								<div
 									class="w-full group border rounded-lg hover:bg-muted py-2 px-3 cursor-grab flex items-center justify-between"
 									draggable="true"
