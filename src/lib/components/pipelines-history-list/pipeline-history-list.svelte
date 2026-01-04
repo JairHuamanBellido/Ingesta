@@ -2,17 +2,34 @@
 	import CheckCircle from 'phosphor-svelte/lib/CheckCircle';
 	import WarningCircle from 'phosphor-svelte/lib/WarningCircle';
 	import Clock from 'phosphor-svelte/lib/Clock';
-	import type { ITest } from '$infrastructure/model/pipeline.model';
+	import { type IPipeline, type ITest } from '$infrastructure/model/pipeline.model';
 	import * as Accordion from '$shadcn-components/accordion/index.js';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import JsonView from '$lib/components/json-viewer/json-view.svelte';
 	import { formatDate } from '@/utils';
+	import Button from '../ui/button/button.svelte';
+	import { getContext } from 'svelte';
+	import { updatePipeline } from '$domain/use-cases/update-pipeline';
+	import { getPipelineById } from '$domain/use-cases/get-pipeline';
 
 	let { tests }: { tests: Array<ITest> } = $props();
+
+	const pipeline = getContext<IPipeline>('pipeline');
+
+	const onDeletePipeline = async (targetId: string) => {
+		const pipeline_db = await getPipelineById(pipeline.key);
+
+		if (pipeline_db) {
+			await updatePipeline(pipeline.key, {
+				...pipeline,
+				tests: pipeline_db.tests.filter((test) => test.id !== targetId)
+			});
+		}
+	};
 </script>
 
 <Accordion.Root class="w-full p-4" type="multiple">
-	{#each tests as test, index(`pipeline-history-${test.id}`)}
+	{#each tests as test, index (`pipeline-history-${test.id}`)}
 		<Accordion.Item value={test.id}>
 			<Accordion.Trigger class="hover:no-underline no-underline cursor-pointer">
 				<div class="flex flex-col space-y-2">
@@ -52,6 +69,11 @@
 				</div>
 			</Accordion.Trigger>
 			<Accordion.Content class="space-y-4">
+				<div class="w-full flex justify-end">
+					<Button size="sm" variant="outline" onclick={async () => onDeletePipeline(test.id)}
+						>Delete</Button
+					>
+				</div>
 				<div class="space-y-2">
 					<Label class="font-semibold">Input Payload</Label>
 					<JsonView json={test.input_payload} />
