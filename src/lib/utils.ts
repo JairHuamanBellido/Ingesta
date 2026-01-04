@@ -5,10 +5,6 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export function cleanObject(obj: any) {
-	return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== '' && value));
-}
-
 export function formatDate(date: Date) {
 	return date.toLocaleString('en-US', {
 		year: 'numeric',

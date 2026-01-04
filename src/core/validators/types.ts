@@ -7,7 +7,6 @@ export interface ValidationResult {
 	message?: string;
 	severity?: ValidationSeverity;
 	ruleName?: string;
-	metadata?: Record<string, any>;
 }
 
 export interface ValidationContext {
