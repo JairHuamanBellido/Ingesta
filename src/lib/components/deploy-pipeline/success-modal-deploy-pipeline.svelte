@@ -51,7 +51,7 @@
 		}
 	}}
 >
-	<Dialog.Content class="max-w-[600px]! max-h-[90dvh] w-full overflow-y-auto">
+	<Dialog.Content class="max-w-[600px]! flex flex-col max-h-[90dvh] w-full overflow-y-auto">
 		<Dialog.Header>
 			<Dialog.Title class="flex items-center space-x-2">
 				<CheckCircle size={24} class="text-green-600" weight="bold" />
