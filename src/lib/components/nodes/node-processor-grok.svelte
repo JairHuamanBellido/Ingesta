@@ -122,7 +122,7 @@
 							</Button>
 						</div>
 						<div class="flex flex-col space-y-4">
-							{#each field.value || field.defaultValue as pattern, index}
+							{#each (field.value as Array<unknown>) || field.defaultValue as pattern, index}
 								<div class="flex space-x-2 items-center">
 									<Input
 										oninput={(e) => {

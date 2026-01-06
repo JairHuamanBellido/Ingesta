@@ -22,7 +22,7 @@
 				getNodes(),
 				getEdges()
 			);
-			pipelineBuilder.build();
+			const processors = pipelineBuilder.build();
 			if (Object.keys(nodeStoreData).length > 0) {
 				toast.error('Please fill all required fields');
 				return;
@@ -32,7 +32,7 @@
 				edges: getEdges(),
 				nodes: getNodes(),
 				pipelineId: pipeline.key,
-				processors: pipelineBuilder.pipeline.processors,
+				processors,
 				simulation_input_payload: pipeline.simulation_input_payload
 			});
 
@@ -41,7 +41,7 @@
 				data: {
 					key: pipeline.key,
 					description: pipeline.description,
-					processors: pipelineBuilder.pipeline.processors
+					processors
 				}
 			});
 			$hasUnsavedChanges = false;

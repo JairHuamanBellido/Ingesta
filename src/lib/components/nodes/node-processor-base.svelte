@@ -20,6 +20,7 @@
 	import Plus from 'phosphor-svelte/lib/Plus';
 	import Trash from 'phosphor-svelte/lib/Trash';
 	import { hasUnsavedChanges } from '@/stores/dirty';
+	import { unknown } from 'zod';
 
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
@@ -131,7 +132,7 @@
 							</Button>
 						</div>
 						<div class="flex flex-col space-y-4">
-							{#each field.value || field.defaultValue || [] as value, index}
+							{#each (field.value as Array<unknown>) || field.defaultValue || [] as value, index}
 								<div class="flex space-x-2 items-center">
 									<Input
 										oninput={(e) => {
