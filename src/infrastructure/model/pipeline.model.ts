@@ -1,3 +1,4 @@
+import type { ProcessorValue } from '$core/processors/node.type';
 import type { Node, Edge } from '@xyflow/svelte';
 
 export interface IPipeline {
@@ -13,7 +14,7 @@ export interface IPipeline {
 }
 
 export interface IProcessor {
-	[key: string]: { [key: string]: string | boolean | string[] | IProcessor[] };
+	[key: string]: Record<string, ProcessorValue>;
 }
 
 export interface ITest {

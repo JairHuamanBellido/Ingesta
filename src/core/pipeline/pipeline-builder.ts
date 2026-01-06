@@ -1,109 +1,136 @@
-import type { ConditionalNodeData, ProcessorsNodeData } from '$core/processors/node.type';
+import type {
+	ConditionalNodeData,
+	ProcessorsNodeData,
+	ProcessorValue
+} from '$core/processors/node.type';
 import type { IPipeline, IProcessor } from '$infrastructure/model/pipeline.model';
 import { nodeStore } from '@/stores/nodeStore';
 import type { Node, Edge } from '@xyflow/svelte';
 import { getOutgoers } from '@xyflow/svelte';
 
-export class PipelineBuilder {
-	public pipeline: Pick<IPipeline, 'description' | 'processors'>;
-	private nodes: Array<Node>;
-	private edges: Array<Edge>;
+type ProcessorPayload = Record<string, ProcessorValue>;
+const GROK_PROCESSOR_PATTERN_DEFINTIONS_KEY = 'pattern_definitions';
+const SCRIPT_PROCESSOR_PARAMS_KEY = 'params';
 
-	private nodesConnected: Node[];
-	constructor(description: string, nodes: Array<Node>, edges: Array<Edge>) {
+class ProcessorPayloadBuilder {
+	private payload: ProcessorPayload = {};
+
+	constructor(
+		private readonly node: Node<ProcessorsNodeData>,
+		private readonly conditionalNode?: Node<ConditionalNodeData>
+	) {}
+
+	build() {
+		this.addFields();
+		this.addCondition();
+		return this.payload;
+	}
+	private addFields() {
+		for (const field of this.node.data.fields) {
+			// console.log("field.key",field.key);
+			const value = this.normalizeValue(field.key, field.value);
+			if (value !== undefined) {
+				this.payload[field.key] = value;
+			} else if (field.required) {
+				this.markFieldAsError(field.key);
+			}
+		}
+	}
+
+	private markFieldAsError(key: string) {
+		nodeStore.update((nodes) => ({
+			...nodes,
+			[this.node.id]: {
+				...nodes[this.node.id],
+				[key]: { hasError: true }
+			}
+		}));
+	}
+
+	private normalizeValue(key: string, value: ProcessorValue) {
+		if (typeof value === 'string') {
+			return value;
+		}
+
+		if (typeof value === 'boolean') {
+			return value;
+		}
+
+		if (Array.isArray(value)) {
+			if (key === GROK_PROCESSOR_PATTERN_DEFINTIONS_KEY || key === SCRIPT_PROCESSOR_PARAMS_KEY) {
+				return Object.fromEntries(
+					(value as { key: string; value: string }[]).map((v) => [v.key, v.value])
+				);
+			}
+			const isStringsArray = value.every((v) => typeof v === 'string');
+			if (isStringsArray) {
+				return value.filter(Boolean);
+			}
+		}
+
+		if (typeof value === 'object' && value && Object.keys(value).length > 0) {
+			return value;
+		}
+		return undefined;
+	}
+
+	private addCondition() {
+		if (this.conditionalNode?.data?.condition) {
+			this.payload['if'] = this.conditionalNode?.data.condition;
+		}
+	}
+}
+
+export class ProcessorFactory {
+	constructor(
+		private readonly nodes: Node[],
+		private readonly edges: Edge[]
+	) {}
+
+	create(node: Node<ProcessorsNodeData>): IProcessor {
+		const outgoers = getOutgoers(node, this.nodes, this.edges);
+		const conditionalNode = outgoers.find((n) => n.type === 'nodeConditional') as
+			| Node<ConditionalNodeData>
+			| undefined;
+
+		const onFailureNodes = outgoers.filter(
+			(n) => n.type !== 'nodeConditional'
+		) as Node<ProcessorsNodeData>[];
+
+		const payloadBuilder = new ProcessorPayloadBuilder(node, conditionalNode);
+
+		const payload = payloadBuilder.build();
+
+		const failures = onFailureNodes.map((n) => this.create(n));
+
+		if (failures.length) {
+			payload.on_failure = failures;
+		}
+
+		return { [node.data.key]: payload };
+	}
+}
+
+export class PipelineBuilder {
+	private readonly pipeline: Pick<IPipeline, 'description' | 'processors'>;
+	private readonly processorsFactory: ProcessorFactory;
+	private readonly entryNodes: Node[];
+
+	constructor(description: string, nodes: Node[], edges: Edge[]) {
 		this.pipeline = {
 			description,
 			processors: []
 		};
-		this.edges = edges;
-		this.nodes = nodes;
-		this.nodesConnected = getOutgoers({ id: 'nodestart', type: 'source' }, nodes, edges);
+		this.processorsFactory = new ProcessorFactory(nodes, edges);
+		this.entryNodes = getOutgoers({ id: 'nodestart', type: 'source' }, nodes, edges);
 	}
 
-	private addProcessor(node: Node): IProcessor {
-		const nodeKey = node.data.key as string;
-
-		const sourcesNodes = getOutgoers({ id: `${node.id}`, type: 'source' }, this.nodes, this.edges);
-
-		const getConditionalNode = sourcesNodes.find(
-			(n) => n.type === 'nodeConditional'
-		) as Node<ConditionalNodeData>;
-		const getOnFailureNode = sourcesNodes.filter(
-			(n) => n.type !== 'nodeConditional'
-		) as Node<ProcessorsNodeData>[];
-
-		const ifField = (node.data as ProcessorsNodeData).fields.find((f) => f.key === 'if');
-
-		const payload = (node.data as ProcessorsNodeData).fields.reduce(
-			(
-				acc: {
-					[key: string]: string | boolean | string[] | IProcessor[];
-				},
-				{ key, value, required }
-			) => {
-				const isAStringValue = typeof value === 'string';
-				const isAnArrayAndFirstValueIsNotEmpty = Array.isArray(value) && value[0];
-				const isObjectNotEmpty =
-					typeof value === 'object' && value !== null && Object.keys(value).length > 0;
-				const isBooleanValue = typeof value === 'boolean';
-				if (
-					(isAStringValue && value) ||
-					isAnArrayAndFirstValueIsNotEmpty ||
-					isObjectNotEmpty ||
-					isBooleanValue
-				) {
-					if (key === 'pattern_definitions' || key === 'params') {
-						acc[key] = Object.fromEntries(
-							(value as { key: string; value: string }[]).map((v) => {
-								if (v.key && v.value) {
-									return [v.key, v.value];
-								}
-								return [];
-							})
-						);
-					} else {
-						if (Array.isArray(value) && value.every((v) => typeof v === 'string')) {
-							acc[key] = value.filter(Boolean);
-						} else {
-							acc[key] = value as string;
-						}
-					}
-				} else if (required) {
-					nodeStore.update((nodes) => ({
-						...nodes,
-						[node.id]: { ...nodes[node.id], [key]: { hasError: true } }
-					}));
-				}
-				return acc;
-			},
-			{}
-		);
-
-		if (ifField && getConditionalNode?.data?.condition) {
-			payload['if'] = getConditionalNode?.data.condition;
+	build(): IPipeline['processors'] {
+		for (const node of this.entryNodes) {
+			this.pipeline.processors.push(
+				this.processorsFactory.create(node as Node<ProcessorsNodeData>)
+			);
 		}
-
-		payload.on_failure = [];
-
-		getOnFailureNode.forEach((onFailureNode) => {
-			if (Array.isArray(payload.on_failure)) {
-				const failureNode = this.addProcessor(onFailureNode);
-				(payload.on_failure as IProcessor[]).push(failureNode);
-			}
-		});
-
-		if (Array.isArray(payload.on_failure) && payload.on_failure.length === 0) {
-			delete payload.on_failure;
-		}
-
-		return { [nodeKey]: payload };
-	}
-
-	public build() {
-		this.nodesConnected.forEach((node) => {
-			const result = this.addProcessor(node);
-
-			this.pipeline.processors.push(result);
-		});
+		return this.pipeline.processors;
 	}
 }
