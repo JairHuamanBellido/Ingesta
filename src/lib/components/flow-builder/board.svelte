@@ -12,6 +12,7 @@
 	} from '@xyflow/svelte';
 	import Play from 'phosphor-svelte/lib/Play';
 	import Gear from 'phosphor-svelte/lib/Gear';
+	import ArrowLeft from 'phosphor-svelte/lib/ArrowLeft';
 	import { useDnD } from './dnd-provider.svelte';
 	import NodeStart from '$components-nodes/node-start.svelte';
 	import NodeConditional from '$components-nodes/node-conditional.svelte';
@@ -149,9 +150,14 @@
 <Sidebar />
 <div class="w-[calc(100vw_-_300px)] relative">
 	<div
-		class="h-16 border-b border-border/50 flex items-center justify-between px-8 py-4 bg-white dark:bg-background"
+		class="h-16 border-b border-border/50 flex items-center justify-between px-8 pl-2 py-4 bg-white dark:bg-background"
 	>
-		<h2 class="font-semibold text-lg">{name}</h2>
+		<div class="flex items-center space-x-0.5">
+			<Button size="sm" variant="ghost" href="/">
+				<ArrowLeft />
+			</Button>
+			<h2 class="font-semibold text-lg">{name}</h2>
+		</div>
 		<div class="flex items-center space-x-4">
 			<Button
 				variant="outline"
