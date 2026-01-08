@@ -5,9 +5,12 @@
 	import { Root, Item, Trigger, Content } from '$shadcn-components/accordion/index.js';
 	import { PROCESSORS_BY_CATEGORY, PROCESSORS } from '$core/processors/list-processors';
 	import IconsDictionary from '../icons/icons-dictionary.svelte';
+	import Input from '../ui/input/input.svelte';
 	const type = useDnD();
 
-	const processors = $derived(PROCESSORS);
+	let processors = $derived(PROCESSORS);
+
+	let searchQuery = $state('');
 	const onDragStart = (event: DragEvent, nodeType: string) => {
 		if (!event.dataTransfer) {
 			return null;
@@ -24,9 +27,15 @@
 	class="w-[300px] bg-white h-full border-border/50 border-r dark:bg-background px-4 py-8 overflow-auto"
 >
 	<div class="nodes-list">
-		<p class="font-semibold text-lg mb-4">Processors</p>
+		<p class="font-semibold text-lg">Processors</p>
+		<div class="mb-4 mt-2">
+			<Input placeholder="Search processors..." bind:value={searchQuery} />
+		</div>
 		<ul class="space-y-2">
-			{#each PROCESSORS_BY_CATEGORY as category(`sidebar-${category.key}`)}
+			{#each PROCESSORS_BY_CATEGORY as category (`sidebar-${category.key}`)}
+				{@const filteredProcessors = category.processors.filter((p) =>
+					p.label.toLowerCase().includes(searchQuery.toLowerCase())
+				)}
 				<Root value={[category.key]} type="multiple">
 					<Item value={category.key}>
 						<Trigger class="flex items-center hover:no-underline cursor-pointer">
@@ -39,12 +48,12 @@
 								/>
 								<p>{category.label}</p>
 								<p class="bg-muted rounded-full py-0.5 px-2 text-xs text-muted-foreground">
-									{category.processors.length}
+									{filteredProcessors.length}
 								</p>
 							</div>
 						</Trigger>
 						<Content class="space-y-4">
-							{#each category.processors as processor(`sidebar-processor-${processor.type}`)}
+							{#each filteredProcessors as processor (`sidebar-processor-${processor.type}`)}
 								<div
 									class="w-full group border rounded-lg hover:bg-muted py-2 px-3 cursor-grab flex items-center justify-between"
 									draggable="true"
