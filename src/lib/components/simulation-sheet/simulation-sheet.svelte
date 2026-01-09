@@ -13,6 +13,7 @@
 	import PipelineHistoryList from '$lib/components/pipelines-history-list/pipeline-history-list.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import JsonView from '$lib/components/json-viewer/json-view.svelte';
+	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	type ResultType = 'success' | 'failure' | 'redirect' | 'error';
 
@@ -200,7 +201,7 @@
 			<Input type="hidden" name="pipelineId" value={pipeline.key} />
 			<Button
 				type="submit"
-				disabled={loading}
+				disabled={loading || $hasUnsavedChanges}
 				class="w-full flex items-center justify-center gap-2"
 			>
 				{#if loading}
