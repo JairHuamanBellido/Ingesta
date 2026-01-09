@@ -32,6 +32,7 @@
 	import NodeProcessorScript from '../nodes/node-processor-script.svelte';
 	import { hasUnsavedChanges } from '@/stores/dirty';
 	import DeploymentLogsButton from '../deployment-logs/deployment-logs-button.svelte';
+	import { saveNodesAndEdgesAndProcessors } from '$domain/use-cases/save-nodes-and-edges';
 
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
@@ -85,7 +86,7 @@
 		}
 	};
 
-	const onDrop = (event: DragEvent) => {
+	const onDrop = async (event: DragEvent) => {
 		event.preventDefault();
 
 		if (!type.current) {
@@ -106,7 +107,14 @@
 		} satisfies Node;
 
 		nodes = [...nodes, newNode];
-		$hasUnsavedChanges = true;
+
+		await saveNodesAndEdgesAndProcessors({
+			nodes: nodes,
+			edges: edges,
+			pipelineId: pipeline.key,
+			processors: pipeline.processors,
+			simulation_input_payload: pipeline.simulation_input_payload
+		});
 	};
 
 	let colorMode: ColorMode = $state('system');

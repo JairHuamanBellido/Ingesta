@@ -1,1 +1,1 @@
-export const ERROR_TOAST_DURATION = 15000;
+export const ERROR_TOAST_DURATION = 1000;
