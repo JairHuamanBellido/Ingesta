@@ -59,7 +59,7 @@
 
 <Dialog.Root bind:open={isOpen}>
 	<Dialog.Trigger>
-		<Button variant="outline">View Logs</Button>
+		<Button size="sm" variant="outline">View Logs</Button>
 	</Dialog.Trigger>
 	<Dialog.Content class="max-w-[600px]! max-h-[90dvh] w-full overflow-y-auto">
 		<Dialog.Header>

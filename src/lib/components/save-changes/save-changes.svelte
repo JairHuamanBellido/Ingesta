@@ -67,4 +67,4 @@
 	};
 </script>
 
-<Button onclick={onClick}>Save</Button>
+<Button size="sm" onclick={onClick}>Save</Button>

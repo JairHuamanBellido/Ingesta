@@ -115,7 +115,7 @@
 	bind:open={openModal}
 >
 	<Dialog.Trigger>
-		<Button>
+		<Button size="sm">
 			<span>Deploy</span>
 			<RocektLaunch size={16} />
 		</Button>
