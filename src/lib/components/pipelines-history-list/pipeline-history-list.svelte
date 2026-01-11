@@ -11,6 +11,7 @@
 	import { getContext } from 'svelte';
 	import { updatePipeline } from '$domain/use-cases/update-pipeline';
 	import { getPipelineById } from '$domain/use-cases/get-pipeline';
+	import RetryPipelineTest from '../retry-pipeline-test/retry-pipeline-test.svelte';
 
 	let { tests }: { tests: Array<ITest> } = $props();
 
@@ -69,10 +70,11 @@
 				</div>
 			</Accordion.Trigger>
 			<Accordion.Content class="space-y-4">
-				<div class="w-full flex justify-end">
+				<div class="w-full flex justify-end space-x-2">
 					<Button size="sm" variant="outline" onclick={async () => onDeletePipeline(test.id)}
 						>Delete</Button
 					>
+					<RetryPipelineTest test={test} />
 				</div>
 				<div class="space-y-2">
 					<Label class="font-semibold">Input Payload</Label>
