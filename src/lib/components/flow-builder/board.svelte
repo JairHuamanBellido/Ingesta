@@ -10,14 +10,11 @@
 		type Edge,
 		type Connection
 	} from '@xyflow/svelte';
-	import Play from 'phosphor-svelte/lib/Play';
-	import Gear from 'phosphor-svelte/lib/Gear';
 	import ArrowLeft from 'phosphor-svelte/lib/ArrowLeft';
 	import { useDnD } from './dnd-provider.svelte';
 	import NodeStart from '$components-nodes/node-start.svelte';
 	import NodeConditional from '$components-nodes/node-conditional.svelte';
 	import Sidebar from '$lib/components/sidebar/index.svelte';
-	import SaveChanges from '$lib/components/save-changes/save-changes.svelte';
 	import SimulationSheet from '$lib/components/simulation-sheet/simulation-sheet.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ConfigurationIngestionSheet from '../configuration-ingestion-sheet/configuration-ingestion-sheet.svelte';
@@ -26,13 +23,12 @@
 	import type { DeletionContext } from '$core/validators/types';
 	import { createConnectionValidationChain } from '$core/validators/connection';
 	import NodeProcessorPipeline from '../nodes/node-processor-pipeline.svelte';
-	import DeployPipelineButton from '../deploy-pipeline/deploy-pipeline-button.svelte';
 	import NodeProcessorCsv from '../nodes/node-processor-csv.svelte';
 	import NodeProcessorGrok from '../nodes/node-processor-grok.svelte';
 	import NodeProcessorScript from '../nodes/node-processor-script.svelte';
 	import { hasUnsavedChanges } from '@/stores/dirty';
-	import DeploymentLogsButton from '../deployment-logs/deployment-logs-button.svelte';
 	import { saveNodesAndEdgesAndProcessors } from '$domain/use-cases/save-nodes-and-edges';
+	import Toolbar from '../toolbar/toolbar.svelte';
 
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
@@ -166,29 +162,7 @@
 			</Button>
 			<h2 class="font-semibold text-lg">{name}</h2>
 		</div>
-		<div class="flex items-center space-x-4">
-			<Button
-				variant="outline"
-				class="flex items-center justify-center"
-				onclick={() =>
-					(currentSheetOpen = currentSheetOpen === 'configuration' ? '' : 'configuration')}
-			>
-				<Gear size={12} />
-				<span>Configuration</span>
-			</Button>
-			<Button
-				disabled={$hasUnsavedChanges}
-				variant="outline"
-				class="flex items-center justify-center"
-				onclick={() => (currentSheetOpen = currentSheetOpen === 'simulation' ? '' : 'simulation')}
-			>
-				<Play size={12} />
-				<span>Simulate</span>
-			</Button>
-			<SaveChanges {pipeline} />
-			<DeployPipelineButton {pipeline} />
-			<DeploymentLogsButton key={pipeline.key} />
-		</div>
+		<Toolbar {pipeline} bind:currentSheetOpen />
 	</div>
 	<div class="w-full relative h-full flex">
 		<SvelteFlow
