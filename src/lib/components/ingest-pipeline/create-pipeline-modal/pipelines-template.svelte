@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { PIPELINES_TEMPLATE } from '$core/pipeline/pipeline-template';
-	import IconsDictionary from '../icons/icons-dictionary.svelte';
-	import Label from '../ui/label/label.svelte';
+	import IconsDictionary from '@/components/icons/icons-dictionary.svelte';
+	import Label from '@/components/ui/label/label.svelte';
+	
 	let { selectedTemplate = $bindable() }: { selectedTemplate: string } = $props();
 </script>
 

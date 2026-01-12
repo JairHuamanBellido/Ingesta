@@ -3,8 +3,8 @@
 	import Gear from 'phosphor-svelte/lib/Gear';
 	import Check from 'phosphor-svelte/lib/Check';
 	import Copy from 'phosphor-svelte/lib/Copy';
-	import Button from '../ui/button/button.svelte';
-	import JsonView from '../json-viewer/json-view.svelte';
+	import Button from '../../ui/button/button.svelte';
+	import JsonView from '../../json-viewer/json-view.svelte';
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
 	let copiedInput = $state(false);

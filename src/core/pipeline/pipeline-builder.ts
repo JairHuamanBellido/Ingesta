@@ -27,7 +27,6 @@ class ProcessorPayloadBuilder {
 	}
 	private addFields() {
 		for (const field of this.node.data.fields) {
-			// console.log("field.key",field.key);
 			const value = this.normalizeValue(field.key, field.value);
 			if (value !== undefined) {
 				this.payload[field.key] = value;

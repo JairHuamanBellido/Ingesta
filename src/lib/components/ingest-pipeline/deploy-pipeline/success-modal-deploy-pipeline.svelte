@@ -10,7 +10,7 @@
 	import Button from '$shadcn-components/button/button.svelte';
 
 	import { delay } from '@/utils';
-	import JsonView from '../json-viewer/json-view.svelte';
+	import JsonView from '../../json-viewer/json-view.svelte';
 
 	let { pipeline, open = $bindable() }: { open: boolean; pipeline: IPipeline } = $props();
 

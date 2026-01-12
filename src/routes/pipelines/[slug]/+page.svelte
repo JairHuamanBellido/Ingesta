@@ -2,7 +2,7 @@
 	import type { PageProps } from './$types';
 	import { liveQuery } from 'dexie';
 	import { getPipelineById } from '../../../domain/use-cases/get-pipeline';
-	import FlowBuilder from '$lib/components/flow-builder/index.svelte';
+	import FlowBuilder from '@/components/ingest-pipeline/flow-builder/index.svelte';
 
 	let { data }: PageProps = $props();
 

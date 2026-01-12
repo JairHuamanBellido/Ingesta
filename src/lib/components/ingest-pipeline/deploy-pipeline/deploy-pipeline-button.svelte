@@ -58,7 +58,7 @@
 
 			await delay(1000);
 
-			await axios.post('/', {
+			await axios.post('/pipelines', {
 				key: optionSelected === 'new-pipeline' ? newPipelineName : existingPipelineSelected,
 				description: pipeline.description || '',
 				processors: pipeline.processors

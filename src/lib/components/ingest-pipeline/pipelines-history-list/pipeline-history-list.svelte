@@ -7,7 +7,7 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import JsonView from '$lib/components/json-viewer/json-view.svelte';
 	import { formatDate } from '@/utils';
-	import Button from '../ui/button/button.svelte';
+	import Button from '../../ui/button/button.svelte';
 	import { getContext } from 'svelte';
 	import { updatePipeline } from '$domain/use-cases/update-pipeline';
 	import { getPipelineById } from '$domain/use-cases/get-pipeline';

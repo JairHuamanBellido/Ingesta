@@ -8,29 +8,30 @@
 		type Node,
 		type NodeProps
 	} from '@xyflow/svelte';
+	import { nodeStore } from '@/stores/nodeStore';
 	import Label from '$shadcn-components/label/label.svelte';
 	import Input from '$shadcn-components/input/input.svelte';
 	import Switch from '$shadcn-components/switch/switch.svelte';
-	import IconsDictionary from '../icons/icons-dictionary.svelte';
-	import { nodeStore } from '@/stores/nodeStore';
+	import * as Select from '$shadcn-components/select/index.js';
+	import { onMount } from 'svelte';
+	import axios from 'axios';
 	import { hasUnsavedChanges } from '@/stores/dirty';
+	import IconsDictionary from '@/components/icons/icons-dictionary.svelte';
 
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
+	let pipelines = $state<Array<string>>([]);
 	const { updateNodeData } = useSvelteFlow();
 	const connectionsConditionals = useNodeConnections({
 		handleType: 'source',
 		handleId: `node-processor-${props.id}-conditional-source`
 	});
 
+	let selectedOption = $state('Select an option');
+
 	function updateFieldValue(fieldKey: string, newValue: string | boolean | Array<string>) {
 		const updatedFields = props.data.fields.map((field) =>
-			field.key === fieldKey
-				? {
-						...field,
-						value: fieldKey === 'target_fields' ? (newValue as string).split(',') : newValue
-					}
-				: field
+			field.key === fieldKey ? { ...field, value: newValue } : field
 		);
 
 		updateNodeData(props.id, { ...props.data, fields: updatedFields });
@@ -39,6 +40,11 @@
 
 	const connectionsConditionalsCount = $derived(connectionsConditionals.current.length);
 	let targetNodeStore = $derived($nodeStore[props.id]);
+
+	onMount(async () => {
+		const response = await axios.get(`/pipelines`);
+		pipelines = Object.keys(response.data);
+	})
 </script>
 
 <div class={`bg-card rounded-lg w-[300px] border-[1px] border-border ${props.data.groupKey}`}>
@@ -83,6 +89,7 @@
 						{/if}
 					</div>
 				{/if}
+
 				{#if field.type === 'boolean'}
 					<div class="flex items-center justify-between">
 						<Label
@@ -121,6 +128,40 @@
 								class="left-[267px] "
 								position={Position.Right}
 							/>
+						{/if}
+					</div>
+				{/if}
+				{#if field.type === 'select'}
+					{@const options = (field as any).value}
+					<div class="space-y-1">
+						<Label
+							for={field.key}
+							class={`text-xs  font-medium text-foreground ${hasError && 'text-red-500'}`}
+							>{field.label}</Label
+						>
+						<Select.Root
+							type="single"
+							value={field.value as string}
+							onValueChange={(value) => {
+								selectedOption = value;
+								updateFieldValue(field.key, value);
+							}}
+						>
+							<Select.Trigger
+								class={`bg-card py-2 px-3 w-full rounded-md text-sm! ${hasError && 'border-red-500'}`}
+								placeholder="Select an option"
+								name={field.key}
+							>
+								{field.value || 'Select an option'}
+							</Select.Trigger>
+							<Select.Content>
+								{#each pipelines as pipeline}
+									<Select.Item value={pipeline}>{pipeline}</Select.Item>
+								{/each}
+							</Select.Content>
+						</Select.Root>
+						{#if hasError}
+							<p class="text-xs text-red-500">Please enter a value</p>
 						{/if}
 					</div>
 				{/if}

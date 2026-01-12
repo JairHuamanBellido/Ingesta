@@ -8,19 +8,21 @@
 		type Node,
 		type NodeProps
 	} from '@xyflow/svelte';
-	import IconsDictionary from '../icons/icons-dictionary.svelte';
-	import { nodeStore } from '@/stores/nodeStore';
 	import Label from '$shadcn-components/label/label.svelte';
 	import Input from '$shadcn-components/input/input.svelte';
 	import Switch from '$shadcn-components/switch/switch.svelte';
+	import Button from '$shadcn-components/button/button.svelte';
+	import * as Tooltip from '$shadcn-components/tooltip/index.js';
 	import * as Select from '$shadcn-components/select/index.js';
-	import { onMount } from 'svelte';
-	import axios from 'axios';
+	import { nodeStore } from '@/stores/nodeStore';
+	import Info from 'phosphor-svelte/lib/Info';
+	import Plus from 'phosphor-svelte/lib/Plus';
+	import Trash from 'phosphor-svelte/lib/Trash';
 	import { hasUnsavedChanges } from '@/stores/dirty';
+	import IconsDictionary from '@/components/icons/icons-dictionary.svelte';
 
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
-	let pipelines = $state<Array<string>>([]);
 	const { updateNodeData } = useSvelteFlow();
 	const connectionsConditionals = useNodeConnections({
 		handleType: 'source',
@@ -40,12 +42,21 @@
 
 	const connectionsConditionalsCount = $derived(connectionsConditionals.current.length);
 	let targetNodeStore = $derived($nodeStore[props.id]);
-
-	onMount(async () => {
-		const response = await axios.get(`/pipelines`);
-		pipelines = Object.keys(response.data);
-	})
 </script>
+
+{#snippet tooltip(text: string, link: string)}
+	<Tooltip.Provider>
+		<Tooltip.Root>
+			<Tooltip.Trigger>
+				<Info />
+			</Tooltip.Trigger>
+			<Tooltip.Content>
+				<p>{text}</p>
+				<a class="underline" href={link} target="_blank" rel="noopener noreferrer">Link</a>
+			</Tooltip.Content>
+		</Tooltip.Root>
+	</Tooltip.Provider>
+{/snippet}
 
 <div class={`bg-card rounded-lg w-[300px] border-[1px] border-border ${props.data.groupKey}`}>
 	<div class="font-medium py-3 border-border/50 border-b px-4 space-y-1 relative">
@@ -89,7 +100,75 @@
 						{/if}
 					</div>
 				{/if}
-
+				{#if field.type === 'array'}
+					<div class="space-y-1">
+						<div class="flex items-center justify-between">
+							<div class="flex items-center space-x-1">
+								<Label
+									for={field.key}
+									class={`text-xs font-medium text-foreground ${hasError && 'text-red-500'}`}
+								>
+									{field.label}
+								</Label>
+								{#if field.helperText}
+									{@render tooltip(field.helperText.text, field.helperText.link)}
+								{/if}
+							</div>
+							<Button
+								size="sm"
+								variant="ghost"
+								class="lg:text-xs! p-2! text-primary hover:bg-transparent! hover:text-primary"
+								onclick={() => {
+									if (field.value) {
+										updateFieldValue(field.key, [...(field.value as string[]), '']);
+									} else {
+										updateFieldValue(field.key, ['']);
+									}
+								}}
+							>
+								<Plus />
+								Add
+							</Button>
+						</div>
+						<div class="flex flex-col space-y-4">
+							{#each (field.value as Array<unknown>) || field.defaultValue || [] as value, index}
+								<div class="flex space-x-2 items-center">
+									<Input
+										oninput={(e) => {
+											if (field.value) {
+												updateFieldValue(
+													field.key,
+													(field.value as string[]).map((p, i) =>
+														i === index ? e.currentTarget.value : p
+													)
+												);
+											} else {
+												updateFieldValue(field.key, [e.currentTarget.value]);
+											}
+										}}
+										{value}
+										class={`bg-card py-2 px-3 rounded-md text-sm! ${hasError && 'border-red-500'}`}
+										placeholder="Enter value"
+									/>
+									{#if index > 0}
+										<Button
+											size="sm"
+											variant="ghost"
+											onclick={() => {
+												updateFieldValue(
+													field.key,
+													(field.value as string[]).filter((_, i) => i !== index)
+												);
+											}}
+										>
+											<Trash />
+										</Button>
+									{/if}
+								</div>
+							{/each}
+						</div>
+					</div>
+				{/if}
 				{#if field.type === 'boolean'}
 					<div class="flex items-center justify-between">
 						<Label
@@ -132,7 +211,7 @@
 					</div>
 				{/if}
 				{#if field.type === 'select'}
-					{@const options = (field as any).value}
+					{@const value = (field as any).value || (field as any).defaultValue}
 					<div class="space-y-1">
 						<Label
 							for={field.key}
@@ -141,7 +220,7 @@
 						>
 						<Select.Root
 							type="single"
-							value={field.value as string}
+							value={(field.value || field.defaultValue) as string}
 							onValueChange={(value) => {
 								selectedOption = value;
 								updateFieldValue(field.key, value);
@@ -152,11 +231,11 @@
 								placeholder="Select an option"
 								name={field.key}
 							>
-								{field.value || 'Select an option'}
+								{value || selectedOption}
 							</Select.Trigger>
 							<Select.Content>
-								{#each pipelines as pipeline}
-									<Select.Item value={pipeline}>{pipeline}</Select.Item>
+								{#each (field as any).options as option}
+									<Select.Item value={option}>{option}</Select.Item>
 								{/each}
 							</Select.Content>
 						</Select.Root>

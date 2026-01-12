@@ -7,7 +7,7 @@
 	import { toast } from 'svelte-sonner';
 	import { nodeStore } from '@/stores/nodeStore';
 	import { PipelineBuilder } from '$core/pipeline/pipeline-builder';
-	import ErrorToast from '../custom-toast/error-toast.svelte';
+	import ErrorToast from '../../custom-toast/error-toast.svelte';
 	import { hasUnsavedChanges } from '@/stores/dirty';
 
 	const { getNodes, getEdges } = useSvelteFlow();
@@ -36,7 +36,7 @@
 				simulation_input_payload: pipeline.simulation_input_payload
 			});
 
-			await axios('/', {
+			await axios('/pipelines', {
 				method: 'POST',
 				data: {
 					key: pipeline.key,
