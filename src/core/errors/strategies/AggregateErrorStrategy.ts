@@ -1,13 +1,13 @@
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import type { ErrorStrategy } from '../error-strategy';
 import type { APIResult } from '$core/axios/types';
 import type { OpenSearchErrorResponse } from '$infrastructure/opensearch/types';
 
 export class AggregateErrorStrategy implements ErrorStrategy {
 	canHanddle(error: unknown): boolean {
-		if (!(error instanceof AxiosError && 'isAxiosError' in error)) return false;
+		if (!axios.isAxiosError(error)) return false;
 
-		const axiosError = error.toJSON() as AxiosError;
+		const axiosError = error;
 		return axiosError.name === 'AggregateError';
 	}
 
