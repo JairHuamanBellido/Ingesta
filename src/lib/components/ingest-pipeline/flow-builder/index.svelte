@@ -3,7 +3,7 @@
 	import { SvelteFlowProvider } from '@xyflow/svelte';
 	import Board from './board.svelte';
 	import DnDProvider from './dnd-provider.svelte';
-	import type { IPipeline } from '../../../infrastructure/model/pipeline.model';
+	import type { IPipeline } from '$infrastructure/model/pipeline.model';
 
 	let props: { pipeline: IPipeline } = $props();
 	setContext('pipeline', props.pipeline);

@@ -11,10 +11,11 @@
 	import Checkbox from '$shadcn-components/checkbox/checkbox.svelte';
 	import PipelinesTemplate from './pipelines-template.svelte';
 	import { PIPELINES_TEMPLATE } from '$core/pipeline/pipeline-template';
-	import ErrorToast from '../custom-toast/error-toast.svelte';
 	import type { OpenSearchErrorDetail } from '$infrastructure/opensearch/types';
-	import { basic_template } from '../simulation-sheet/simulation-list';
 	import Info from 'phosphor-svelte/lib/Info';
+	import ErrorToast from '@/components/custom-toast/error-toast.svelte';
+	import { DEFAULT_SIMULATION_INPUT_PAYLOAD } from '../simulation-sheet/simulation-list';
+	
 	let loading = $state(false);
 	let selectedTemplate = $state<string>('blank');
 	let pipelineKey = $state<string>('');
@@ -37,7 +38,7 @@
 						description,
 						name,
 						tests: [],
-						simulation_input_payload: basic_template,
+						simulation_input_payload: DEFAULT_SIMULATION_INPUT_PAYLOAD,
 						...(enableDeploymentLogging
 							? { deployment_logs_index_name: `ingesta-${pipelineId}-deployment-logs` }
 							: {})

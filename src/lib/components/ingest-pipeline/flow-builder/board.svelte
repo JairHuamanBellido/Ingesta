@@ -12,10 +12,10 @@
 	} from '@xyflow/svelte';
 	import ArrowLeft from 'phosphor-svelte/lib/ArrowLeft';
 	import { useDnD } from './dnd-provider.svelte';
-	import NodeStart from '$components-nodes/node-start.svelte';
-	import NodeConditional from '$components-nodes/node-conditional.svelte';
-	import Sidebar from '$lib/components/sidebar/index.svelte';
-	import SimulationSheet from '$lib/components/simulation-sheet/simulation-sheet.svelte';
+	import NodeStart from '@/components/ingest-pipeline/nodes/node-start.svelte';
+	import NodeConditional from '@/components/ingest-pipeline/nodes/node-conditional.svelte';
+	import Sidebar from '@/components/ingest-pipeline/sidebar/index.svelte';
+	import SimulationSheet from '@/components/ingest-pipeline/simulation-sheet/simulation-sheet.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ConfigurationIngestionSheet from '../configuration-ingestion-sheet/configuration-ingestion-sheet.svelte';
 	import NodeProcessorBase from '../nodes/node-processor-base.svelte';
@@ -157,7 +157,7 @@
 		class="h-16 border-b border-border/50 flex items-center justify-between px-8 pl-2 py-4 bg-white dark:bg-background"
 	>
 		<div class="flex items-center space-x-0.5">
-			<Button size="sm" variant="ghost" href="/">
+			<Button size="sm" variant="ghost" href="/pipelines">
 				<ArrowLeft />
 			</Button>
 			<h2 class="font-semibold text-lg">{name}</h2>

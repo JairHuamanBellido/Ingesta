@@ -4,8 +4,8 @@
 
 	import { Root, Item, Trigger, Content } from '$shadcn-components/accordion/index.js';
 	import { PROCESSORS_BY_CATEGORY, PROCESSORS } from '$core/processors/list-processors';
-	import IconsDictionary from '../icons/icons-dictionary.svelte';
-	import Input from '../ui/input/input.svelte';
+	import IconsDictionary from '../../icons/icons-dictionary.svelte';
+	import Input from '../../ui/input/input.svelte';
 	const type = useDnD();
 
 	let processors = $derived(PROCESSORS);

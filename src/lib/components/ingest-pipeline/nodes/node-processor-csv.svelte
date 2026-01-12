@@ -11,38 +11,24 @@
 	import Label from '$shadcn-components/label/label.svelte';
 	import Input from '$shadcn-components/input/input.svelte';
 	import Switch from '$shadcn-components/switch/switch.svelte';
-	import IconsDictionary from '../icons/icons-dictionary.svelte';
 	import { nodeStore } from '@/stores/nodeStore';
-	import Button from '../ui/button/button.svelte';
-	import Trash from 'phosphor-svelte/lib/Trash';
-	import Plus from 'phosphor-svelte/lib/Plus';
 	import { hasUnsavedChanges } from '@/stores/dirty';
+	import IconsDictionary from '@/components/icons/icons-dictionary.svelte';
 
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
 	const { updateNodeData } = useSvelteFlow();
-	let paramsCount = $state(0);
-	$effect(() => {
-		paramsCount = Object.keys(
-			(props.data.fields.find((f) => f.key === 'params')?.value || {}) as {
-				[key: string]: string;
-			}
-		).length;
-	});
 	const connectionsConditionals = useNodeConnections({
 		handleType: 'source',
 		handleId: `node-processor-${props.id}-conditional-source`
 	});
 
-	function updateFieldValue(
-		fieldKey: string,
-		newValue: string | boolean | Array<string> | { key: string; value: string }[]
-	) {
+	function updateFieldValue(fieldKey: string, newValue: string | boolean | Array<string>) {
 		const updatedFields = props.data.fields.map((field) =>
 			field.key === fieldKey
 				? {
 						...field,
-						value: newValue
+						value: fieldKey === 'target_fields' ? (newValue as string).split(',') : newValue
 					}
 				: field
 		);
@@ -113,78 +99,6 @@
 						{#if hasError}
 							<p class="text-xs text-red-500">Please enter a value</p>
 						{/if}
-					</div>
-				{/if}
-				{#if field.type === 'object'}
-					<div class="space-y-1">
-						<div class="flex items-center justify-between">
-							<Label for={field.key} class="text-xs  font-medium text-foreground "
-								>{field.label}</Label
-							>
-							<Button
-								size="sm"
-								variant="ghost"
-								class="lg:text-xs! p-2! text-primary hover:bg-transparent! hover:text-primary"
-								onclick={() => {
-									if (field.value) {
-										updateFieldValue(field.key, [
-											...(field.value as { key: string; value: string }[]),
-											{ key: '', value: '' }
-										]);
-									} else {
-										updateFieldValue(field.key, [{ key: '', value: '' }]);
-									}
-								}}
-							>
-								<Plus />
-								Add
-							</Button>
-						</div>
-						<div class="flex flex-col space-y-4">
-							{#each field.value as { key: string; value: string }[] as parameter, index}
-								<div class="flex items-center space-x-2">
-									<Input
-										oninput={(e) => {
-											updateFieldValue(
-												field.key,
-												(field.value as { key: string; value: string }[]).map((p, i) =>
-													i === index ? { ...p, key: e.currentTarget.value } : p
-												)
-											);
-										}}
-										value={parameter.key}
-										class="bg-card"
-										placeholder="Param name"
-									/>
-									<Input
-										oninput={(e) =>
-											updateFieldValue(
-												field.key,
-												(field.value as { key: string; value: string }[]).map((p, i) =>
-													i === index ? { ...p, value: e.currentTarget.value } : p
-												)
-											)}
-										value={parameter.value}
-										class={'bg-card'}
-										placeholder={`Param value`}
-									/>
-									<Button
-										size="sm"
-										variant="ghost"
-										onclick={() => {
-											updateFieldValue(
-												field.key,
-												(field.value as { key: string; value: string }[]).filter(
-													(_, i) => i !== index
-												)
-											);
-										}}
-									>
-										<Trash />
-									</Button>
-								</div>
-							{/each}
-						</div>
 					</div>
 				{/if}
 				{#if field.type === 'node'}

@@ -1,6 +1,6 @@
 import { PIPELINES_TEMPLATE } from '$core/pipeline/pipeline-template';
-import { basic_template } from '@/components/simulation-sheet/simulation-list';
-import { createPipeline } from '../domain/use-cases/create-pipeline';
+import { createPipeline } from '$domain/use-cases/create-pipeline';
+import { DEFAULT_SIMULATION_INPUT_PAYLOAD } from '@/components/ingest-pipeline/simulation-sheet/simulation-list';
 import type { Actions } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 
@@ -23,7 +23,7 @@ export const actions = {
 			processors: template?.pipeline.processors || [],
 			name,
 			tests: [],
-			simulation_input_payload: basic_template,
+			simulation_input_payload: DEFAULT_SIMULATION_INPUT_PAYLOAD,
 			...(enableDeploymentLogging === 'on'
 				? { deployment_logs_index_name: `ingesta-${pipelineId}-deployment-logs` }
 				: {})

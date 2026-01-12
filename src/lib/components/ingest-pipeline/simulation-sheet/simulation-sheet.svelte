@@ -10,7 +10,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import PipelineHistoryList from '$lib/components/pipelines-history-list/pipeline-history-list.svelte';
+	import PipelineHistoryList from '@/components/ingest-pipeline/pipelines-history-list/pipeline-history-list.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import JsonView from '$lib/components/json-viewer/json-view.svelte';
 	import { hasUnsavedChanges } from '@/stores/dirty';

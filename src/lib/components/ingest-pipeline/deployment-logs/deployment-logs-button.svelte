@@ -6,11 +6,11 @@
 		type OpensearchSearchResponse
 	} from '$infrastructure/opensearch/types';
 	import * as Dialog from '$shadcn-components/dialog/index.js';
-	import Button from '../ui/button/button.svelte';
+	import Button from '../../ui/button/button.svelte';
 	import { formatDate } from '@/utils';
 	import CheckCircle from 'phosphor-svelte/lib/CheckCircle';
 	import * as Accordion from '$shadcn-components/accordion/index.js';
-	import JsonView from '../json-viewer/json-view.svelte';
+	import JsonView from '../../json-viewer/json-view.svelte';
 	import ClockCounterClockwise from 'phosphor-svelte/lib/ClockCounterClockwise';
 	import SpinnerGap from 'phosphor-svelte/lib/SpinnerGap';
 

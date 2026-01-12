@@ -11,12 +11,12 @@
 	import Label from '$shadcn-components/label/label.svelte';
 	import Input from '$shadcn-components/input/input.svelte';
 	import Switch from '$shadcn-components/switch/switch.svelte';
-	import IconsDictionary from '../icons/icons-dictionary.svelte';
 	import { nodeStore } from '@/stores/nodeStore';
-	import Button from '../ui/button/button.svelte';
 	import Trash from 'phosphor-svelte/lib/Trash';
 	import Plus from 'phosphor-svelte/lib/Plus';
 	import { hasUnsavedChanges } from '@/stores/dirty';
+	import IconsDictionary from '@/components/icons/icons-dictionary.svelte';
+	import Button from '@/components/ui/button/button.svelte';
 
 	let props: NodeProps<Node<ProcessorsNodeData>> = $props();
 
