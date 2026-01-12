@@ -2,6 +2,7 @@ import type { IProcessor } from '$infrastructure/model/pipeline.model';
 import { OpenSearchController } from '$infrastructure/opensearch';
 import { json } from '@sveltejs/kit';
 
+const openSearchController = new OpenSearchController();
 export async function POST({ request }: { request: Request }) {
 	const body = (await request.json()) as {
 		deploy_index_name: string;
@@ -13,7 +14,7 @@ export async function POST({ request }: { request: Request }) {
 
 	const { deploy_index_name, pipeline_id, deployment_status, ingest_pipeline, is_rollback } = body;
 
-	const new_doc = await OpenSearchController.insertDeploxymentRecord({
+	const new_doc = await openSearchController.ingest_pipeline.insertDeploxymentRecord({
 		indexName: `ingesta-${deploy_index_name}-deployment-logs`,
 		pipelineId: pipeline_id,
 		ingestPipeline: ingest_pipeline,
