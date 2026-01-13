@@ -1,14 +1,22 @@
 import type { APIResult } from '$core/axios/types';
 import { ErrorHandlerService } from '$core/errors/error-handler';
 import { env } from '$env/dynamic/private';
-import type { IOpensearchGetAllPipelinesResponse, IProcessor } from '$infrastructure/model/pipeline.model';
+import type {
+	IOpensearchGetAllPipelinesResponse,
+	IProcessor
+} from '$infrastructure/model/pipeline.model';
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
-import type { IDeploymentLogs, OpenSearchErrorResponse, OpenSearchOperationResponse, OpensearchSearchResponse } from '../types';
+import type {
+	IDeploymentLogs,
+	OpenSearchErrorResponse,
+	OpenSearchOperationResponse,
+	OpensearchSearchResponse
+} from '../types';
 
 /**
  * Design Pattern: Facade
- * 
+ *
  * This class provides a simplified interface to interact with OpenSearch Ingest Pipeline subsystem.
  * It encapsulates complex operations and provides easy-to-use methods for pipeline-related tasks.
  */
@@ -162,6 +170,19 @@ export class IngestPipelineSubsystem {
 				}
 			);
 
+			return {
+				isSuccess: true,
+				data: response.data,
+				statusCode: response.status
+			};
+		} catch (error) {
+			return this.errorHandler.handleError(error);
+		}
+	}
+
+	async deletePipeline({ pipelineId }: { pipelineId: string }) {
+		try {
+			const response = await this.axiosInstance.delete(`/_ingest/pipeline/${pipelineId}`);
 			return {
 				isSuccess: true,
 				data: response.data,

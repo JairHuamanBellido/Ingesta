@@ -16,8 +16,8 @@ export class BadRequestErrorStrategy implements ErrorStrategy {
 			isSuccess: false,
 			data: {
 				error: {
-					reason: axiosError.response?.data.error.reason ?? '',
-					type: axiosError.response?.data.error.type ?? '',
+					reason: axiosError.response?.data.error.reason ?? 'Bad request',
+					type: axiosError.response?.data.error.type ?? 'bad_request',
 					processor_type: axiosError.response?.data.error.processor_type ?? '',
 					property_name: axiosError.response?.data.error.property_name ?? '',
 					root_cause: axiosError.response?.data.error.root_cause ?? []
