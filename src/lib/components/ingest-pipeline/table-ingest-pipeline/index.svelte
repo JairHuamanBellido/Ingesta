@@ -6,9 +6,9 @@
 	import DropSlash from 'phosphor-svelte/lib/DropSlash';
 	import CheckCircle from 'phosphor-svelte/lib/CheckCircle';
 	import ArrowRight from 'phosphor-svelte/lib/ArrowRight';
-	import PencilSimple from 'phosphor-svelte/lib/PencilSimple';
 	import DotsThreeVertical from 'phosphor-svelte/lib/DotsThreeVertical';
 	import Trash from 'phosphor-svelte/lib/Trash';
+	import EditIngestPipelineModal from '../edit-ingest-pipeline-modal/edit-ingest-pipeline-modal.svelte';
 	let { pipelines }: { pipelines: IPipeline[] } = $props();
 </script>
 
@@ -60,9 +60,7 @@
 					<Table.Cell class="px-6 py-4">{pipeline.processors.length}</Table.Cell>
 					<Table.Cell class="px-6 py-4">{pipeline.tests.length}</Table.Cell>
 					<Table.Cell class="px-6 py-4">
-						<Button variant="ghost" class="text-muted-foreground hover:bg-transparent!">
-							<PencilSimple size={16} />
-						</Button>
+						<EditIngestPipelineModal {pipeline} />
 						<Button
 							href={`/pipelines/${pipeline.key}`}
 							variant="ghost"
