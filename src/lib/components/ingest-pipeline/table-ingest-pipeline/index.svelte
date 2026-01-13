@@ -7,8 +7,8 @@
 	import CheckCircle from 'phosphor-svelte/lib/CheckCircle';
 	import ArrowRight from 'phosphor-svelte/lib/ArrowRight';
 	import DotsThreeVertical from 'phosphor-svelte/lib/DotsThreeVertical';
-	import Trash from 'phosphor-svelte/lib/Trash';
 	import EditIngestPipelineModal from '../edit-ingest-pipeline-modal/edit-ingest-pipeline-modal.svelte';
+	import DeletePipelineModal from '../delete-pipeline-modal/delete-pipeline-modal.svelte';
 	let { pipelines }: { pipelines: IPipeline[] } = $props();
 </script>
 
@@ -76,10 +76,12 @@
 							</DropdownMenu.Trigger>
 							<DropdownMenu.Content>
 								<DropdownMenu.Item
-									class="dark:text-red-300 dark:hover:text-red-300! dark:hover:bg-red-900/20! text-red-600 hover:text-red-600! hover:bg-red-50!"
+									class=" w-full dark:text-red-300 dark:hover:text-red-300! dark:hover:bg-red-900/20! text-red-600 hover:text-red-600! hover:bg-red-50! flex items-center space-x-1"
+									onclick={(e) => {
+										e.preventDefault();
+									}}
 								>
-									<Trash class="dark:text-red-300 text-red-600" size={16} />
-									<span> Delete</span>
+									<DeletePipelineModal pipelineKey={pipeline.key} />
 								</DropdownMenu.Item>
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>

@@ -8,3 +8,12 @@ export async function GET({ params }: { params: { slug: string } }) {
 		status: pipeline.statusCode || 500
 	});
 }
+
+export async function DELETE({ params }: { params: { slug: string } }) {
+	const pipeline = await openSearchController.ingest_pipeline.deletePipeline({
+		pipelineId: params.slug
+	});
+	return json(pipeline.data, {
+		status: pipeline.statusCode || 500
+	});
+}
