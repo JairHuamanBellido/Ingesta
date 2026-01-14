@@ -17,7 +17,6 @@
 	import Sidebar from '@/components/ingest-pipeline/sidebar/index.svelte';
 	import SimulationSheet from '@/components/ingest-pipeline/simulation-sheet/simulation-sheet.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import ConfigurationIngestionSheet from '../configuration-ingestion-sheet/configuration-ingestion-sheet.svelte';
 	import NodeProcessorBase from '../nodes/node-processor-base.svelte';
 	import { createDeletionValidationChain } from '$core/validators/deletion';
 	import type { DeletionContext } from '$core/validators/types';
@@ -184,9 +183,6 @@
 		<!-- <PipelineDetailSheet {pipeline} /> -->
 		{#if currentSheetOpen === 'simulation'}
 			<SimulationSheet {pipeline} />
-		{/if}
-		{#if currentSheetOpen === 'configuration'}
-			<ConfigurationIngestionSheet {pipeline} />
 		{/if}
 	</div>
 </div>
