@@ -1,4 +1,5 @@
 import type { IPipeline } from '$infrastructure/model/pipeline.model';
+import { DEFAULT_SIMULATION_INPUT_PAYLOAD } from '@/components/ingest-pipeline/simulation-sheet/simulation-list';
 
 interface IPipelineTemplate {
 	key: string;
@@ -16,9 +17,11 @@ const BLANK_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' | 'name'> 
 			data: {}
 		}
 	],
-	processors: []
+	processors: [],
+	simulation_input_payload: DEFAULT_SIMULATION_INPUT_PAYLOAD
 };
 const CSV_DATA_PARSER_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' | 'name'> = {
+	simulation_input_payload: DEFAULT_SIMULATION_INPUT_PAYLOAD,
 	edges: [
 		{
 			source: 'nodestart',
@@ -371,6 +374,7 @@ const CSV_DATA_PARSER_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' 
 };
 
 const SECURITY_FIREWALL_LOGS_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' | 'name'> = {
+	simulation_input_payload: DEFAULT_SIMULATION_INPUT_PAYLOAD,
 	edges: [
 		{
 			source: 'nodestart',
@@ -842,6 +846,7 @@ const SECURITY_FIREWALL_LOGS_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'descri
 
 const ECOMMERCE_EVENT_TRACKING_PIPELINE: Omit<IPipeline, 'tests' | 'key' | 'description' | 'name'> =
 	{
+		simulation_input_payload: DEFAULT_SIMULATION_INPUT_PAYLOAD,
 		edges: [
 			{
 				source: 'nodestart',

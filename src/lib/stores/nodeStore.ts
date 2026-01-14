@@ -12,7 +12,7 @@ function createStore() {
 	const { set, subscribe, update } = writable<NodeStore>({});
 
 	return {
-		clear: () => update((state) => ({})),
+		clear: () => update(() => ({})),
 		subscribe,
 		update,
 		set

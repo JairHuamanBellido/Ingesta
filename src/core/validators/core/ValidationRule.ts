@@ -24,17 +24,12 @@ export abstract class ValidationRule {
 		};
 	}
 
-	protected fail(
-		message: string,
-		severity: ValidationSeverity = 'error',
-		metadata: Record<string, any> = {}
-	): ValidationResult {
+	protected fail(message: string, severity: ValidationSeverity = 'error'): ValidationResult {
 		return {
 			success: false,
 			message,
 			severity,
-			ruleName: this.name,
-			metadata
+			ruleName: this.name
 		};
 	}
 }

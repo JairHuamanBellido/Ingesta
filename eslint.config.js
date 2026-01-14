@@ -28,7 +28,7 @@ export default defineConfig(
 		}
 	},
 	{
-		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
+		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js', '**/*.ts'],
 		languageOptions: {
 			parserOptions: {
 				projectService: true,

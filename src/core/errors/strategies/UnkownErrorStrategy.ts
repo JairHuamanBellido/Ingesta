@@ -3,7 +3,7 @@ import type { OpenSearchErrorResponse } from '$infrastructure/opensearch/types';
 import type { ErrorStrategy } from '../error-strategy';
 
 export class UnknownErrorStrategy implements ErrorStrategy {
-	canHanddle(error: unknown): boolean {
+	canHanddle(): boolean {
 		return true;
 	}
 

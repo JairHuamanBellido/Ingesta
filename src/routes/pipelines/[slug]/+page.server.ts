@@ -2,6 +2,7 @@ import { fail } from '@sveltejs/kit';
 import { AxiosError } from 'axios';
 import { OpenSearchController } from '../../../infrastructure/opensearch';
 
+const openSearchController = new OpenSearchController();
 export const actions = {
 	simulate: async (event) => {
 		try {
@@ -10,7 +11,7 @@ export const actions = {
 			const pipelineId = data.get('pipelineId') as string;
 
 			const request_start_at = Date.now();
-			const simulateResponse = await OpenSearchController.simulatePipeline({
+			const simulateResponse = await openSearchController.ingest_pipeline.simulatePipeline({
 				payload: JSON.parse(payload),
 				pipelineId
 			});
@@ -18,7 +19,7 @@ export const actions = {
 			const request_end_at = Date.now();
 			const request_duration = request_end_at - request_start_at;
 			const openSearchResponse = simulateResponse.data;
-			if (!!simulateResponse.data.docs[0]['error']) {
+			if (simulateResponse.data.docs[0]['error']) {
 				return fail(400, { error: openSearchResponse, request_duration });
 			}
 

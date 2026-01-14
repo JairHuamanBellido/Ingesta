@@ -55,11 +55,13 @@ Access the application
 - ✅ Conditional Nodes
 - ✅ Display pipeline configuration (JSON Mode)
 - ✅ Pipeline Simulation
-- 🚧 Failure Processors integration (In Progress)
-- 🔨 Deploy to pipeline (Not Started)
-- 🔨 Save tests (Not Started)
-- 🪖 Pipeline Templates (logs, metrics, security, events) (Planning)
-- 🪖 Bulk Import (Plannig)
+- ✅ Failure Processors integration
+- ✅ Deploy to pipeline
+- ✅ Save tests
+- ✅ Pipeline Templates (logs, metrics, security, events) (Planning)
+- 🚧 ML - Connectors and Groups (In Progress)
+- 🪖 Analyzers (Planning)
+- 🪖 Bulk Import (Planning)
 
 ## Processors Integration
 
@@ -88,7 +90,7 @@ Access the application
 | KV | 🚨 Not Started
 | Lowercase | ✅ Completed
 | ML inference | 🚨 Not Started
-| Pipeline | 🚨 Not Started
+| Pipeline | ✅ Completed
 | Remove | ✅ Completed
 | Remove by pattern | 🚨 Not Started
 | Rename | ✅ Completed |

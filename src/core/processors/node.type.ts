@@ -1,3 +1,12 @@
+import type { IProcessor } from '$infrastructure/model/pipeline.model';
+
+export type ProcessorValue =
+	| string
+	| Array<string>
+	| { key: string; value: string }[]
+	| boolean
+	| IProcessor[]
+	| Record<string, string>;
 export type ProcessorsNodeData = {
 	/**
 	 * Key of the processor node, e.g uppercase, set or append
@@ -23,7 +32,7 @@ export type ProcessorsNodeData = {
 
 	fields: Array<{
 		label: string;
-		value: string | Array<string> | { key: string; value: string }[];
+		value: ProcessorValue;
 		required: boolean;
 		key: string;
 		type: string;
