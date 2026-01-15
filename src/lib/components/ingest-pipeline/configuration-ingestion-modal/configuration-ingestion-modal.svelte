@@ -7,6 +7,7 @@
 	import IconsDictionary from '@/components/icons/icons-dictionary.svelte';
 	import { cn } from '@/utils';
 	import IngestPipelineJsonConfiguration from './containers/ingest-pipeline-json-configuration.svelte';
+	import DeploymentConfiguration from './containers/deployment-configuration.svelte';
 	let { pipeline }: { pipeline: IPipeline } = $props();
 
 	let activeConfiguration = $state(INGEST_PIPELINE_CONFIGURATIONS[0]);
@@ -32,17 +33,34 @@
 							activeConfiguration.key === config.key
 					})}
 				>
-					<IconsDictionary key={config.icon} size={16} weight="bold" />
+					<div
+						tabindex={0}
+						role="button"
+						class="w-full h-full"
+						onclick={() => {
+							activeConfiguration = config;
+						}}
+						onkeydown={(e) => {
+							if (e.key === 'Enter') {
+								activeConfiguration = config;
+							}
+						}}
+					>
+						<IconsDictionary key={config.icon} size={16} weight="bold" />
 
-					<span class="text-sm">
-						{config.name}
-					</span>
+						<span class="text-sm">
+							{config.name}
+						</span>
+					</div>
 				</li>
 			{/each}
 		</ul>
 		<div class="h-full overflow-y-auto w-full py-8 px-4">
 			{#if activeConfiguration.key === 'general'}
 				<IngestPipelineJsonConfiguration {pipeline} />
+			{/if}
+			{#if activeConfiguration.key === 'deployment'}
+				<DeploymentConfiguration {pipeline} />
 			{/if}
 		</div>
 	</Dialog.Content>

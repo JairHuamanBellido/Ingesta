@@ -1,10 +1,35 @@
+import type { IProcessor } from '$infrastructure/model/pipeline.model';
 import { OpenSearchController } from '$infrastructure/opensearch';
 import { json } from '@sveltejs/kit';
 
 const openSearchController = new OpenSearchController();
 export async function GET({ params }: { params: { slug: string } }) {
-	const deploymentLogs = await openSearchController.ingest_pipeline.getDeploymentsLogs({ index: params.slug });
+	const deploymentLogs = await openSearchController.ingest_pipeline.getDeploymentsLogs({
+		index: params.slug
+	});
 	return json(deploymentLogs.data, {
 		status: deploymentLogs.statusCode || 500
 	});
+}
+
+export async function POST({ request }: { request: Request }) {
+	const body = (await request.json()) as {
+		deploy_index_name: string;
+		pipeline_id: string;
+		deployment_status: string;
+		ingest_pipeline: { description: string; processors: Array<IProcessor> };
+		is_rollback: boolean;
+	};
+
+	const { deploy_index_name, pipeline_id, deployment_status, ingest_pipeline, is_rollback } = body;
+
+	const new_doc = await openSearchController.ingest_pipeline.insertDeploxymentRecord({
+		indexName: `ingesta-${deploy_index_name}-deployment-logs`,
+		pipelineId: pipeline_id,
+		ingestPipeline: ingest_pipeline,
+		deploymentStatus: deployment_status,
+		isRollback: is_rollback
+	});
+
+	return json(new_doc.data, { status: new_doc.statusCode || 500 });
 }

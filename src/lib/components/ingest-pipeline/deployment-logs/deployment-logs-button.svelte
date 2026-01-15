@@ -50,7 +50,7 @@
 			await fetchDeploymentLogs();
 			toast.success('Pipeline rolled back successfully');
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		} finally {
 			loading = false;
 		}
