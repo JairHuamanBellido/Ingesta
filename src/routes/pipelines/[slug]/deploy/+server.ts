@@ -1,26 +1,27 @@
-import type { IProcessor } from '$infrastructure/model/pipeline.model';
 import { OpenSearchController } from '$infrastructure/opensearch';
 import { json } from '@sveltejs/kit';
 
 const openSearchController = new OpenSearchController();
-export async function POST({ request }: { request: Request }) {
-	const body = (await request.json()) as {
-		deploy_index_name: string;
-		pipeline_id: string;
-		deployment_status: string;
-		ingest_pipeline: { description: string; processors: Array<IProcessor> };
-		is_rollback: boolean;
-	};
 
-	const { deploy_index_name, pipeline_id, deployment_status, ingest_pipeline, is_rollback } = body;
+export async function PUT({ request }: { request: Request }) {
+	const body = await request.json();
 
-	const new_doc = await openSearchController.ingest_pipeline.insertDeploxymentRecord({
-		indexName: `ingesta-${deploy_index_name}-deployment-logs`,
-		pipelineId: pipeline_id,
-		ingestPipeline: ingest_pipeline,
-		deploymentStatus: deployment_status,
-		isRollback: is_rollback
+	const pipelineKey = body.pipelineKey;
+
+	const indexExist = await openSearchController.index.isIndexExist(
+		`ingesta-${pipelineKey}-deployment-logs`
+	);
+
+	if (indexExist.isSuccess) {
+		return json(indexExist.data, {
+			status: indexExist.statusCode || 500
+		});
+	}
+	const deploymentIndex = await openSearchController.ingest_pipeline.createDeploymentHistoryIndex({
+		indexName: `ingesta-${pipelineKey}-deployment-logs`
 	});
 
-	return json(new_doc.data, { status: new_doc.statusCode || 500 });
+	return json(deploymentIndex.data, {
+		status: deploymentIndex.statusCode || 500
+	});
 }

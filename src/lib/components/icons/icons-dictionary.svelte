@@ -30,6 +30,7 @@
 	import FileText from 'phosphor-svelte/lib/FileText';
 	import Shield from 'phosphor-svelte/lib/Shield';
 	import ShoppingCart from 'phosphor-svelte/lib/ShoppingCart';
+	import RocketLaunch from 'phosphor-svelte/lib/RocketLaunch';
 	import { type IconWeight } from 'phosphor-svelte';
 
 	const IconsPerSection = {
@@ -64,7 +65,8 @@
 		blank: FileText,
 		'csv-data-parser': FileCSV,
 		'security-firewall-logs': Shield,
-		'ecommerce-event-tracking': ShoppingCart
+		'ecommerce-event-tracking': ShoppingCart,
+		rocket: RocketLaunch
 	};
 
 	let {

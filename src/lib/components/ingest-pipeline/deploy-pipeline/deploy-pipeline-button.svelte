@@ -65,13 +65,13 @@
 			});
 
 			if (pipeline.deployment_logs_index_name) {
-				await axios.post(`/pipelines/${pipeline.key}/deploy`, {
+				await axios.post(`/pipelines/${pipeline.key}/deploy/logs`, {
 					deploy_index_name: pipeline.key,
 					pipeline_id:
 						optionSelected === 'new-pipeline' ? newPipelineName : existingPipelineSelected,
 					deployment_status: 'success',
 					ingest_pipeline: { description: pipeline.description, processors: pipeline.processors },
-					is_rollback: false,
+					is_rollback: false
 				});
 			}
 
