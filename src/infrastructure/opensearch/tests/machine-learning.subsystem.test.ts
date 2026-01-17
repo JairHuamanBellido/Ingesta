@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MachineLearningSubsystem } from '../subsystem/machine-learning.subsystem';
 import type { OpenSearchErrorResponse } from '../types';
-import { MLConnectorsMockResponse, MLModelGroupsMockResponse } from './data.mock';
+import {
+	MLConnectorsMockResponse,
+	MLCreateModelGroupMockResponse,
+	MLModelGroupsMockResponse
+} from './data.mock';
 
 const axiosMock = vi.mocked({
 	get: vi.fn(),
@@ -169,5 +173,29 @@ describe('Machine Learning Subsystem', () => {
 		expect((modelGroups.data as OpenSearchErrorResponse)?.error?.type).toBe(
 			'Internal Server Error'
 		);
+	});
+
+	it('should successfully create a Model Group', async () => {
+		// Arrange
+		axiosMock.post.mockResolvedValue({
+			data: MLCreateModelGroupMockResponse,
+			status: 200
+		});
+
+		// Act
+		const machineLearning = new MachineLearningSubsystem();
+		const modelGroup = await machineLearning.createModelGroup({
+			name: 'test-model-group',
+			description: 'test-model-group-description'
+		});
+
+		// Assert
+		expect(modelGroup.isSuccess).toBe(true);
+		expect(modelGroup.data).toEqual(MLCreateModelGroupMockResponse);
+		expect(modelGroup.statusCode).toBe(200);
+		expect(axiosMock.post).toHaveBeenCalledWith('/_plugins/_ml/model_groups/_register', {
+			name: 'test-model-group',
+			description: 'test-model-group-description'
+		});
 	});
 });

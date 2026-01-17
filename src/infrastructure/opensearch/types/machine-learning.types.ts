@@ -14,4 +14,11 @@ export interface MachineLearningModelGroupOpensearch {
 	latest_version: number;
 	name: string;
 	description: string;
+	created_time: number;
+	last_updated_time: number;
+}
+
+export interface MachineLearningModelGroupCreateResponse {
+	model_group_id: string;
+	status: string;
 }

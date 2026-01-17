@@ -1,6 +1,7 @@
 import type { OpensearchSearchResponse } from '../types';
 import type {
 	MachineLearningConnectorOpensearch,
+	MachineLearningModelGroupCreateResponse,
 	MachineLearningModelGroupOpensearch
 } from '../types/machine-learning.types';
 
@@ -41,9 +42,16 @@ export const MLModelGroupsMockResponse: OpensearchSearchResponse<MachineLearning
 						access: 'public',
 						latest_version: 1,
 						name: 'test-name-group',
-						description: 'test-description-group'
+						description: 'test-description-group',
+						created_time: 1768167358221,
+						last_updated_time: 1768167358221
 					}
 				}
 			]
 		}
 	};
+
+export const MLCreateModelGroupMockResponse: MachineLearningModelGroupCreateResponse = {
+	model_group_id: 'test-model-group-id',
+	status: 'CREATED'
+};
