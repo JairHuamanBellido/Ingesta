@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import MlModelGroup from '@/components/machine-learning/ml-groups/ml-model-group.svelte';
 </script>
 
 <div class="flex flex-col space-y-4 w-full max-w-[1440px] mx-auto py-12">
@@ -15,6 +16,8 @@
 			<Tabs.Trigger value="model-groups">Model Groups</Tabs.Trigger>
 		</Tabs.List>
 		<Tabs.Content value="ml-connectors">Content for ML Connectors</Tabs.Content>
-		<Tabs.Content value="model-groups">Content for Model Groups</Tabs.Content>
+		<Tabs.Content value="model-groups">
+			<MlModelGroup />
+		</Tabs.Content>
 	</Tabs.Root>
 </div>

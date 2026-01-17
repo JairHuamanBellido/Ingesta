@@ -4,6 +4,7 @@ import { env } from '$env/dynamic/private';
 import type { OpenSearchErrorResponse, OpensearchSearchResponse } from '../types';
 import type {
 	MachineLearningConnectorOpensearch,
+	MachineLearningModelGroupCreateResponse,
 	MachineLearningModelGroupOpensearch
 } from '../types/machine-learning.types';
 import { ErrorHandlerService } from '$core/errors/error-handler';
@@ -67,6 +68,28 @@ export class MachineLearningSubsystem {
 				},
 				from,
 				size
+			});
+			return {
+				isSuccess: true,
+				data: response.data,
+				statusCode: response.status
+			};
+		} catch (error) {
+			return this.errorHandler.handleError(error);
+		}
+	}
+
+	async createModelGroup({
+		name,
+		description
+	}: {
+		name: string;
+		description?: string;
+	}): Promise<APIResult<MachineLearningModelGroupCreateResponse | OpenSearchErrorResponse>> {
+		try {
+			const response = await this.axiosInstance.post('/_plugins/_ml/model_groups/_register', {
+				name,
+				description
 			});
 			return {
 				isSuccess: true,
