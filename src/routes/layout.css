@@ -168,4 +168,10 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+
+	label.required::after {
+		content: ' *';
+		@apply text-red-500;
+		vertical-align: middle;
+	}
 }

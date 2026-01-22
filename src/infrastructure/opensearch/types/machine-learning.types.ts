@@ -22,3 +22,19 @@ export interface MachineLearningModelGroupCreateResponse {
 	model_group_id: string;
 	status: string;
 }
+
+export interface MachineLearningConnectorCreateResponse {
+	connector_id: string;
+}
+
+export interface MachineLearningConnectorRegisterResponse {
+	model_id: string;
+	status: string;
+	task_id: string;
+}
+
+export interface MachineLearningDeployModelResponse {
+	task_id: string;
+	task_type: string;
+	status: string;
+}

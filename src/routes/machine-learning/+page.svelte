@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import MlConnectors from '@/components/machine-learning/ml-connectors/ml-connectors.svelte';
 	import MlModelGroup from '@/components/machine-learning/ml-groups/ml-model-group.svelte';
 </script>
 
@@ -15,7 +16,9 @@
 			<Tabs.Trigger value="ml-connectors">ML Connectors</Tabs.Trigger>
 			<Tabs.Trigger value="model-groups">Model Groups</Tabs.Trigger>
 		</Tabs.List>
-		<Tabs.Content value="ml-connectors">Content for ML Connectors</Tabs.Content>
+		<Tabs.Content value="ml-connectors">
+			<MlConnectors />
+		</Tabs.Content>
 		<Tabs.Content value="model-groups">
 			<MlModelGroup />
 		</Tabs.Content>

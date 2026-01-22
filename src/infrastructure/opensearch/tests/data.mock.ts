@@ -1,5 +1,6 @@
 import type { OpensearchSearchResponse } from '../types';
 import type {
+	MachineLearningConnectorCreateResponse,
 	MachineLearningConnectorOpensearch,
 	MachineLearningModelGroupCreateResponse,
 	MachineLearningModelGroupOpensearch
@@ -54,4 +55,8 @@ export const MLModelGroupsMockResponse: OpensearchSearchResponse<MachineLearning
 export const MLCreateModelGroupMockResponse: MachineLearningModelGroupCreateResponse = {
 	model_group_id: 'test-model-group-id',
 	status: 'CREATED'
+};
+
+export const MLCreateConnectorMockResponse: MachineLearningConnectorCreateResponse = {
+	connector_id: 'test-connector-id'
 };

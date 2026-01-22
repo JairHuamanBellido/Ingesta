@@ -31,6 +31,10 @@
 	import Shield from 'phosphor-svelte/lib/Shield';
 	import ShoppingCart from 'phosphor-svelte/lib/ShoppingCart';
 	import RocketLaunch from 'phosphor-svelte/lib/RocketLaunch';
+	import Database from 'phosphor-svelte/lib/Database';
+	import Lightning from 'phosphor-svelte/lib/Lightning';
+	import Plug from 'phosphor-svelte/lib/Plug';
+	import SpinnerGap from 'phosphor-svelte/lib/SpinnerGap';
 	import { type IconWeight } from 'phosphor-svelte';
 
 	const IconsPerSection = {
@@ -39,6 +43,7 @@
 		'parsing-and-extraction': Scan,
 		'filtering-and-cleanup': Funnel,
 		advanced: Gear,
+		gear: Gear,
 		append: ListPlusIcon,
 		uppercase: ArrowUp,
 		set: PencilSimple,
@@ -66,7 +71,11 @@
 		'csv-data-parser': FileCSV,
 		'security-firewall-logs': Shield,
 		'ecommerce-event-tracking': ShoppingCart,
-		rocket: RocketLaunch
+		rocket: RocketLaunch,
+		database: Database,
+		lightning: Lightning,
+		plug: Plug,
+		loading: SpinnerGap
 	};
 
 	let {
