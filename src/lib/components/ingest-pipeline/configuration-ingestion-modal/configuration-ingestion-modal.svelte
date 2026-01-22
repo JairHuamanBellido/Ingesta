@@ -28,7 +28,7 @@
 			</li>
 			{#each INGEST_PIPELINE_CONFIGURATIONS as config}
 				<li
-					class={cn('h-8 p-2 flex rounded-md gap-2 items-center cursor-pointer', {
+					class={cn('h-8 p-2 flex rounded-md cursor-pointer', {
 						'bg-sidebar-primary text-sidebar-primary-foreground font-medium':
 							activeConfiguration.key === config.key
 					})}
@@ -36,7 +36,7 @@
 					<div
 						tabindex={0}
 						role="button"
-						class="w-full h-full"
+						class="w-full h-full flex rounded-md gap-2 items-center"
 						onclick={() => {
 							activeConfiguration = config;
 						}}

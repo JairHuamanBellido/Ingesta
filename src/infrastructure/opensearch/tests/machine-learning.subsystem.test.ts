@@ -3,6 +3,7 @@ import { MachineLearningSubsystem } from '../subsystem/machine-learning.subsyste
 import type { OpenSearchErrorResponse } from '../types';
 import {
 	MLConnectorsMockResponse,
+	MLCreateConnectorMockResponse,
 	MLCreateModelGroupMockResponse,
 	MLModelGroupsMockResponse
 } from './data.mock';
@@ -197,5 +198,30 @@ describe('Machine Learning Subsystem', () => {
 			name: 'test-model-group',
 			description: 'test-model-group-description'
 		});
+	});
+
+	it('should successfully create a ml connector', async () => {
+		// Arrange
+		axiosMock.post.mockResolvedValue({
+			data: MLCreateConnectorMockResponse,
+			status: 200
+		});
+
+		// Act
+		const machineLearning = new MachineLearningSubsystem();
+		const connector = await machineLearning.createMlConnector({
+			actions: [],
+			credential: {},
+			description: '',
+			name: '',
+			parameters: {},
+			protocol: 'http',
+			version: '1.1'
+		});
+
+		// Assert
+		expect(connector.isSuccess).toBe(true);
+		expect(connector.data).toEqual(MLCreateConnectorMockResponse);
+		expect(connector.statusCode).toBe(200);
 	});
 });
